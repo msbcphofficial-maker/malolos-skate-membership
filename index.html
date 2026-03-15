@@ -1040,7 +1040,7 @@
           letter-spacing: 0.05em;
           flex-shrink: 0;
         ">+63</span>
-        <input type="tel" name="phone" id="mobileNumber" placeholder="9XX XXX XXXX" maxlength="10" pattern="9[0-9]{9}" style="flex:1; border-left:none;" oninput="this.value=this.value.replace(/[^0-9]/g,'').replace(/^([^9])/,'');" required>
+        <input type="tel" name="phone" id="mobileNumber" placeholder="9XX XXX XXXX" maxlength="10" pattern="9[0-9]{9}" style="flex:1; border-left:none;" required>
       </div>
       <div class="field-hint">// PH mobile number — starts with 9 (e.g. 917 123 4567)</div>
       <div class="error-msg">Enter a valid Philippine mobile number.</div>
@@ -1084,6 +1084,7 @@
         <option>6 – 10 years</option>
         <option>10+ years</option>
       </select>
+      <div class="error-msg" id="yearsSkatingError">Please select your years skating.</div>
     </div>
 
     <div class="field-group">
@@ -1180,6 +1181,13 @@
         <span class="pickup-info-value">GCash</span>
       </div>
       <div class="field-hint" style="margin-top: 12px;">// We'll reach out with payment and pickup details after you submit.</div>
+      <div style="margin-top:16px;">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--sage-light);line-height:1.6;">
+          <input type="checkbox" id="deliveryAck" style="margin-top:2px;flex-shrink:0;width:16px;height:16px;accent-color:var(--sage);">
+          I understand that Physical ID requires ₱370 GCash payment and pickup at Malolos Skatepark.
+        </label>
+        <div class="error-msg" id="deliveryAckError">Please acknowledge the Physical ID payment and pickup terms before submitting.</div>
+      </div>
 
       <!-- PHYSICAL CARD PREVIEW -->
       <div class="phys-preview-wrap">
@@ -1199,6 +1207,7 @@
 
     <!-- SUBMIT -->
     <div class="submit-wrap">
+      <div id="submitError" class="error-msg" style="text-align:center; margin-bottom:10px; display:none;"></div>
       <button type="submit" class="submit-btn">Submit &amp; Join the Crew</button>
       <p class="submit-note">
         // Free membership · Your info stays within the community
@@ -1283,7 +1292,7 @@
   </div>
   </div>
   <div class="id-footer">
-    <button class="id-download-btn" onclick="downloadDigitalID()">
+    <button class="id-download-btn" onclick="downloadDigitalID(this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
         <polyline points="7 10 12 15 17 10"/>
@@ -1546,7 +1555,7 @@
         <div id="printingScreenIDPreview" style="margin-bottom:20px; width:100%;"></div>
 
         <!-- Download button -->
-        <button onclick="downloadDigitalID()" style="
+        <button onclick="downloadDigitalID(this)" style="
           width: 100%;
           background: #7a9e8e;
           color: #0f1720;
@@ -1702,6 +1711,11 @@
     const physical = document.getElementById('idPhysical').checked;
     const section = document.getElementById('deliverySection');
     section.classList.toggle('visible', physical);
+    // Reset acknowledgment when switching ID types
+    const ack = document.getElementById('deliveryAck');
+    const ackErr = document.getElementById('deliveryAckError');
+    if (ack) ack.checked = false;
+    if (ackErr) ackErr.classList.remove('visible');
   }
 
   // Toggle address fields
@@ -1731,7 +1745,18 @@
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
     const idTypeSelected = document.querySelector('input[name="idType"]:checked'); const idTypeError = document.getElementById('idTypeError'); if (!idTypeSelected) { valid = false; if(idTypeError) idTypeError.classList.add('visible'); } else { if(idTypeError) idTypeError.classList.remove('visible'); }
-    const firstAward = document.querySelector('input[name="awards[]"]'); const awardsError = document.getElementById('awardsError'); if(!firstAward || !firstAward.value.trim()) { valid = false; if(awardsError) awardsError.classList.add('visible'); } else { if(awardsError) awardsError.classList.remove('visible'); }
+    if (idTypeSelected && idTypeSelected.value === 'physical') {
+      const deliveryAck = document.getElementById('deliveryAck');
+      const deliveryAckError = document.getElementById('deliveryAckError');
+      if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
+      else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
+    }
+    const awardsError = document.getElementById('awardsError');
+    const allAwardInputs = [...document.querySelectorAll('input[name="awards[]"]')];
+    // Remove blank rows if more than one exists
+    allAwardInputs.forEach(function(inp) { if (!inp.value.trim() && allAwardInputs.length > 1) { const row = inp.closest('.award-row'); if (row) row.remove(); } });
+    const filledAwards = [...document.querySelectorAll('input[name="awards[]"]')].filter(function(i) { return i.value.trim(); });
+    if (filledAwards.length === 0) { valid = false; if(awardsError) awardsError.classList.add('visible'); } else { if(awardsError) awardsError.classList.remove('visible'); }
 
 
     if (!valid) {
@@ -1740,52 +1765,49 @@
       return;
     }
 
-    // Show success screen immediately
-    populateDigitalID();
-    document.getElementById('successScreen').classList.add('visible');
-    window.scrollTo({ top: 0 });
-
-    // If Physical ID selected, hide digital ID card and show GCash payment only
-    const selectedIdType = document.querySelector('input[name="idType"]:checked');
-    const gcashSection = document.getElementById('gcashPaymentSection');
-    const idCardWrapper = document.getElementById('idCaptureWrapper');
-    if (selectedIdType && selectedIdType.value === 'physical') {
-      if (idCardWrapper) idCardWrapper.style.display = 'none';
-      if (gcashSection) {
-        gcashSection.style.display = 'block';
-        setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-      }
-    } else {
-      if (idCardWrapper) idCardWrapper.style.display = '';
-      if (gcashSection) gcashSection.style.display = 'none';
-    }
+    // Show loading state on submit button
+    const submitBtn = this.querySelector('.submit-btn');
+    const submitErrEl = document.getElementById('submitError');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting...'; }
+    if (submitErrEl) { submitErrEl.style.display = 'none'; submitErrEl.classList.remove('visible'); }
 
     // Upload photo to Uploadcare then submit to Web3Forms
     const fd = new FormData(this);
     const styles = [...document.querySelectorAll('input[name="style"]:checked')].map(c => c.value);
     const awardVals = [...document.querySelectorAll('input[name="awards[]"]')].map(i => i.value.trim()).filter(Boolean);
     (async () => {
-      let photoURL = '[ No photo uploaded ]';
-      if (croppedDataURL) {
-        try {
-          const blob = await (await fetch(croppedDataURL)).blob();
-          const ucForm = new FormData();
-          ucForm.append('UPLOADCARE_PUB_KEY', '1439745cf3abcc6b660b');
-          ucForm.append('UPLOADCARE_STORE', '1');
-          ucForm.append('file', blob, 'profile-photo.jpg');
-          const ucRes = await fetch('https://upload.uploadcare.com/base/', { method: 'POST', body: ucForm });
-          const ucData = await ucRes.json();
-          if (ucData.file) {
-            try {
-              const infoRes = await fetch('https://upload.uploadcare.com/info/?pub_key=1439745cf3abcc6b660b&file_id=' + ucData.file);
-              const infoData = await infoRes.json();
-              photoURL = infoData.original_file_url || ('https://ucarecdn.com/' + ucData.file + '/');
-            } catch(e2) {
-              photoURL = 'https://ucarecdn.com/' + ucData.file + '/';
-            }
-          }
-        } catch (e) { /* silent fail */ }
+      function showSubmitError(msg) {
+        if (submitErrEl) { submitErrEl.textContent = msg; submitErrEl.style.display = 'block'; submitErrEl.classList.add('visible'); }
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit & Join the Crew'; }
       }
+
+      // — Photo upload —
+      let photoURL = null;
+      try {
+        const blob = await (await fetch(croppedDataURL)).blob();
+        const ucForm = new FormData();
+        ucForm.append('UPLOADCARE_PUB_KEY', '1439745cf3abcc6b660b');
+        ucForm.append('UPLOADCARE_STORE', '1');
+        ucForm.append('file', blob, 'profile-photo.jpg');
+        const ucRes = await fetch('https://upload.uploadcare.com/base/', { method: 'POST', body: ucForm });
+        const ucData = await ucRes.json();
+        if (ucData.file) {
+          try {
+            const infoRes = await fetch('https://upload.uploadcare.com/info/?pub_key=1439745cf3abcc6b660b&file_id=' + ucData.file);
+            const infoData = await infoRes.json();
+            photoURL = infoData.original_file_url || ('https://ucarecdn.com/' + ucData.file + '/');
+          } catch(e2) {
+            photoURL = 'https://ucarecdn.com/' + ucData.file + '/';
+          }
+        }
+        if (!photoURL) throw new Error('No file URL returned from upload');
+      } catch (e) {
+        showSubmitError('Photo upload failed. Please re-upload your photo and try again.');
+        document.getElementById('photoErrorMsg').classList.add('visible');
+        return;
+      }
+
+      // — Web3Forms submission —
       const payload = {
         access_key: '5a6e298c-dbef-4e27-a77f-6384f637d97e',
         subject: 'New MSBC Member: ' + fd.get('firstName') + ' ' + fd.get('lastName'),
@@ -1808,11 +1830,39 @@
         'ID Type': fd.get('idType') === 'physical' ? 'Physical ID (P370)' : 'Digital ID (Free)',
         'Profile Photo': photoURL
       };
-      fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(() => {});
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Server error: ' + res.status);
+        const data = await res.json();
+        if (!data.success) throw new Error('Submission rejected');
+      } catch (err) {
+        showSubmitError('Something went wrong. Please try again.');
+        return;
+      }
+
+      // — Success: show success screen —
+      populateDigitalID();
+      document.getElementById('successScreen').classList.add('visible');
+      window.scrollTo({ top: 0 });
+
+      // If Physical ID selected, hide digital ID card and show GCash payment only
+      const selectedIdType = document.querySelector('input[name="idType"]:checked');
+      const gcashSection = document.getElementById('gcashPaymentSection');
+      const idCardWrapper = document.getElementById('idCaptureWrapper');
+      if (selectedIdType && selectedIdType.value === 'physical') {
+        if (idCardWrapper) idCardWrapper.style.display = 'none';
+        if (gcashSection) {
+          gcashSection.style.display = 'block';
+          setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+        }
+      } else {
+        if (idCardWrapper) idCardWrapper.style.display = '';
+        if (gcashSection) gcashSection.style.display = 'none';
+      }
     })();
   });
 
@@ -1850,7 +1900,12 @@
     // Profile photo
     const photoWrap = document.getElementById('idPhotoWrap');
     if (croppedDataURL) {
-      photoWrap.innerHTML = `<img src="${croppedDataURL}" class="id-photo" alt="Profile">`;
+      photoWrap.innerHTML = '';
+      const profileImg = document.createElement('img');
+      profileImg.src = croppedDataURL;
+      profileImg.className = 'id-photo';
+      profileImg.alt = 'Profile';
+      photoWrap.appendChild(profileImg);
     }
 
     // Awards
@@ -1859,7 +1914,13 @@
     const awardsSection = document.getElementById('idAwardsSection');
     const awardsList = document.getElementById('idAwardsList');
     if (awards.length > 0) {
-      awardsList.innerHTML = awards.map(a => `<div class="id-award-item">${a}</div>`).join('');
+      awardsList.innerHTML = '';
+      awards.forEach(function(a) {
+        const div = document.createElement('div');
+        div.className = 'id-award-item';
+        div.textContent = a;
+        awardsList.appendChild(div);
+      });
       awardsSection.style.display = 'block';
     } else {
       awardsSection.style.display = 'none';
@@ -1868,48 +1929,91 @@
 
 
   // ── DOWNLOAD DIGITAL ID ──
-  async function downloadDigitalID() {
-    // Use html2canvas via CDN
-    if (typeof html2canvas === 'undefined') {
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-      document.head.appendChild(script);
-      await new Promise(res => script.onload = res);
+  async function downloadDigitalID(btn) {
+    const originalHTML = btn ? btn.innerHTML : null;
+    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Generating your ID...'; }
+
+    try {
+      // Load html2canvas with a 10-second timeout
+      if (typeof html2canvas === 'undefined') {
+        await Promise.race([
+          new Promise(function(res, rej) {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = res;
+            script.onerror = function() { rej(new Error('Failed to load html2canvas')); };
+            document.head.appendChild(script);
+          }),
+          new Promise(function(_, rej) { setTimeout(function() { rej(new Error('Timeout')); }, 10000); })
+        ]);
+      }
+
+      const card = document.getElementById('idCaptureWrapper');
+
+      // Temporarily show card off-screen if hidden (physical ID flow hides it)
+      const wasHidden = card.style.display === 'none';
+      if (wasHidden) {
+        card.style.position = 'fixed';
+        card.style.top = '-9999px';
+        card.style.left = '-9999px';
+        card.style.display = 'block';
+        await new Promise(function(res) { requestAnimationFrame(res); });
+      }
+
+      const canvas = await html2canvas(card, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: null,
+        logging: false
+      });
+
+      // Restore hidden state
+      if (wasHidden) {
+        card.style.display = 'none';
+        card.style.position = '';
+        card.style.top = '';
+        card.style.left = '';
+      }
+
+      const link = document.createElement('a');
+      const first = (document.querySelector('[name="firstName"]') || {}).value || 'member';
+      const last = (document.querySelector('[name="lastName"]') || {}).value || '';
+      link.download = ('Malolos-Skateboarding-ID-' + first + '-' + last + '.jpg').replace(/\s+/g, '-');
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+    } catch (err) {
+      alert('Download failed. Please try again.');
+    } finally {
+      if (btn) { btn.disabled = false; if (originalHTML) btn.innerHTML = originalHTML; }
     }
-    const card = document.getElementById('idCaptureWrapper');
-
-    // Temporarily show card off-screen if hidden (physical ID flow hides it)
-    const wasHidden = card.style.display === 'none';
-    if (wasHidden) {
-      card.style.position = 'fixed';
-      card.style.top = '-9999px';
-      card.style.left = '-9999px';
-      card.style.display = 'block';
-      await new Promise(res => requestAnimationFrame(res));
-    }
-
-    const canvas = await html2canvas(card, {
-      scale: 3,
-      useCORS: true,
-      backgroundColor: null,
-      logging: false
-    });
-
-    // Restore hidden state
-    if (wasHidden) {
-      card.style.display = 'none';
-      card.style.position = '';
-      card.style.top = '';
-      card.style.left = '';
-    }
-
-    const link = document.createElement('a');
-    const first = (document.querySelector('[name="firstName"]') || {}).value || 'member';
-    const last = (document.querySelector('[name="lastName"]') || {}).value || '';
-    link.download = ('Malolos-Skateboarding-ID-' + first + '-' + last + '.jpg').replace(/\s+/g, '-');
-    link.href = canvas.toDataURL('image/jpeg', 0.95);
-    link.click();
   }
+
+  // Mobile number validation
+  (function() {
+    const mobileInput = document.getElementById('mobileNumber');
+    const mobileError = mobileInput && mobileInput.closest('.field-group') && mobileInput.closest('.field-group').querySelector('.error-msg');
+    if (!mobileInput) return;
+    mobileInput.addEventListener('input', function() {
+      // Strip non-digits
+      let val = this.value.replace(/[^0-9]/g, '');
+      // Enforce starts with 9
+      if (val.length > 0 && val[0] !== '9') val = val.slice(1);
+      // Enforce max 10 digits
+      if (val.length > 10) val = val.slice(0, 10);
+      this.value = val;
+      // Inline error feedback
+      if (mobileError) {
+        if (val.length > 0 && (val[0] !== '9' || val.length !== 10)) {
+          mobileError.textContent = 'Must start with 9 and be exactly 10 digits (e.g. 9171234567).';
+          mobileError.classList.add('visible');
+          this.classList.add('error');
+        } else if (val.length === 10) {
+          mobileError.classList.remove('visible');
+          this.classList.remove('error');
+        }
+      }
+    });
+  })();
 
   // Remove error on input
   document.querySelectorAll('input, select, textarea').forEach(el => {
