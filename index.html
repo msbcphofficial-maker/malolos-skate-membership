@@ -1800,9 +1800,9 @@
           try {
             const infoRes = await fetch('https://upload.uploadcare.com/info/?pub_key=1439745cf3abcc6b660b&file_id=' + ucData.file);
             const infoData = await infoRes.json();
-            photoURL = infoData.original_file_url || ('https://ucarecdn.com/' + ucData.file + '/');
+            photoURL = infoData.original_file_url || ('https://ucarecdn.com/' + ucData.file + '/profile-photo.jpg');
           } catch(e2) {
-            photoURL = 'https://ucarecdn.com/' + ucData.file + '/';
+            photoURL = 'https://ucarecdn.com/' + ucData.file + '/profile-photo.jpg';
           }
         }
         if (!photoURL) throw new Error('No file URL returned from upload');
