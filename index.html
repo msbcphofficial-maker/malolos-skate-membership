@@ -652,7 +652,7 @@
     position: relative;
     text-align: left;
   }
-  .id-footer { width: 100%; max-width: 460px; padding: 24px 20px 0; box-sizing: border-box; }
+  .id-footer { width: 100%; max-width: 460px; padding: 24px 0 0; box-sizing: border-box; }
   /* ── ID OUTER WRAPPER ── */
   .id-outer {
     width: 100%;
@@ -1021,9 +1021,9 @@
 
     <div class="field-group">
       <label>Email Address <span class="required">*</span></label>
-      <input type="email" name="email" placeholder="your@email.com" required>
+      <input type="email" name="email" id="emailInput" placeholder="your@email.com" required>
       <div class="field-hint">// For ID delivery updates and announcements</div>
-      <div class="error-msg">Enter a valid email address.</div></div>
+      <div class="error-msg" id="emailError">Enter a valid email address.</div></div>
 
     <div class="field-group">
       <label>Mobile Number</label>
@@ -1060,7 +1060,8 @@
 
     <div class="field-group">
       <label>Skate Name / Alias <span class="required">*</span></label>
-      <input type="text" name="skateName" placeholder="What they call you at the park" required>
+      <input type="text" name="skateName" placeholder="What they call you at the park" maxlength="10" required>
+      <div class="field-hint">// Max 10 characters</div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
@@ -1081,7 +1082,7 @@
       <label>Years Skating <span class="required">*</span></label>
       <select name="yearsSkating" required>
         <option value="" disabled selected>Select range</option>
-        <option>Less than 1 year</option>
+        <option>&lt; 1 year</option>
         <option>1 – 2 years</option>
         <option>3 – 5 years</option>
         <option>6 – 10 years</option>
@@ -1162,7 +1163,7 @@
             <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
                 <li>&#x2022; Premium printed card.</li>
                 <li>&#x2022; Exclusive physical design.</li>
-                <li>&#x2022; Pickup at Malolos Skatepark.</li>
+                <li>&#x2022; Pickup at Explore Co. Skate Shop.</li>
               </ul>
               <em style="display:block;margin-top:8px;">Optional &mdash; you can still join for free with just the Digital ID.</em></div>
           </label>
@@ -1174,20 +1175,27 @@
     <div class="delivery-section" id="deliverySection">
       <div class="pickup-info-row">
         <span class="pickup-info-label">Pickup</span>
-        <span class="pickup-info-value" id="pickupLocation">Malolos Skatepark</span>
+        <span class="pickup-info-value" id="pickupLocation" style="display:flex;align-items:center;gap:8px;">
+          Explore Co. Skate Shop
+          <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" title="Get directions" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size:13px;white-space:nowrap;opacity:0.85;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Directions
+          </a>
+        </span>
       </div>
       <div class="pickup-info-row">
         <span class="pickup-info-label">Ready in</span>
-        <span class="pickup-info-value">~1 Week</span>
+        <span class="pickup-info-value">7 Days</span>
       </div>
       <div class="pickup-info-row">
         <span class="pickup-info-label">Payment</span>
         <span class="pickup-info-value">GCash</span>
       </div>
       <div class="field-hint" style="margin-top: 12px;">// We'll reach out with payment and pickup details after you submit.</div>
+      <div class="field-hint" style="margin-top: 8px;">// Your ₱370 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
       <div style="margin-top:14px; display:flex; align-items:flex-start; gap:8px;">
         <input type="checkbox" id="deliveryAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;">
-        <label for="deliveryAck" style="font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that Physical ID requires ₱370 GCash payment and pickup at Malolos Skatepark.</label>
+        <label for="deliveryAck" style="font-family:'Share Tech Mono',monospace; font-size:10px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that Physical ID requires ₱370 GCash payment and pickup at Explore Co. Skate Shop.</label>
       </div>
       <div class="error-msg" id="deliveryAckError">Please check the box above before submitting.</div>
 
@@ -1252,7 +1260,8 @@
           <div class="id-fullname" id="idFullName">—</div>
           <div class="id-number" id="idNumber">ID NO. 20260001</div>
           <div class="id-meta">
-            Member since <span id="idMemberYear">2026</span>
+            Member since <span id="idMemberYear">2026</span><br>
+            <span id="idBarangay">Malolos</span>
           </div>
         </div>
       </div>
@@ -1754,6 +1763,18 @@
       }
     });
 
+    // Validate email format
+    const emailField = document.getElementById('emailInput');
+    const emailErr = document.getElementById('emailError');
+    if (emailField && emailField.value.trim()) {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(emailField.value.trim());
+      if (!emailOk) {
+        emailField.classList.add('error');
+        if (emailErr) emailErr.classList.add('visible');
+        valid = false;
+      }
+    }
+
     // Validate photo, all radios, and awards
     if (!croppedDataURL) { document.getElementById('photoErrorMsg').classList.add('visible'); valid = false; } else { document.getElementById('photoErrorMsg').classList.remove('visible'); }
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
@@ -1878,6 +1899,8 @@
     document.getElementById('idFullName').textContent = (first + ' ' + last).toUpperCase() || '--';
 
     document.getElementById('idMemberYear').textContent = new Date().getFullYear();
+    const brgy = get('barangay'); const city = get('city');
+    document.getElementById('idBarangay').textContent = [brgy, city].filter(Boolean).join(', ') || 'Malolos';
 
     // ID Number (from Supabase insert, passed in as memberId)
     document.getElementById('idNumber').textContent = 'ID NO. ' + (memberId || '2026----');
