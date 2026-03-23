@@ -1648,8 +1648,11 @@
       previewSlot.appendChild(clone);
     }
 
-    document.getElementById('printingScreen').style.display = 'flex';
-    window.scrollTo({ top: 0 });
+    const printScreen = document.getElementById('printingScreen');
+    if (printScreen) {
+      printScreen.style.display = 'flex';
+      window.scrollTo({ top: 0 });
+    }
   }
 
   // Cropper.js for 1:1 photo crop
@@ -1659,6 +1662,19 @@
   function previewPhoto(input) {
     const file = input.files[0];
     if (!file) return;
+    // MIME type validation — block non-image files
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Please upload a valid image file (JPG, PNG, or WEBP).');
+      input.value = '';
+      return;
+    }
+    // File size check upfront (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Photo must be under 10MB. Please use a smaller image.');
+      input.value = '';
+      return;
+    }
     const reader = new FileReader();
     reader.onload = function(e) {
       document.getElementById('cropImage').src = e.target.result;
@@ -1688,14 +1704,20 @@
 
   function applyCrop() {
     if (!cropper) return;
-    const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
-    croppedDataURL = canvas.toDataURL('image/jpeg', 0.9);
-    const preview = document.getElementById('photoPreview');
-    const placeholder = document.getElementById('photoPlaceholder');
-    preview.src = croppedDataURL;
-    preview.style.display = 'block';
-    placeholder.style.display = 'none';
-    closeCropModal();
+    try {
+      const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
+      if (!canvas) throw new Error('Could not generate crop canvas');
+      croppedDataURL = canvas.toDataURL('image/jpeg', 0.9);
+      const preview = document.getElementById('photoPreview');
+      const placeholder = document.getElementById('photoPlaceholder');
+      preview.src = croppedDataURL;
+      preview.style.display = 'block';
+      placeholder.style.display = 'none';
+      closeCropModal();
+    } catch (err) {
+      alert('Could not crop photo. Please try uploading again.');
+      closeCropModal();
+    }
   }
 
   function closeCropModal() {
@@ -1793,9 +1815,7 @@
       if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
       else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
     }
-    // Remove blank rows if more than one exists (awards optional)
-    const allAwardInputs = [...document.querySelectorAll('input[name="awards[]"]')];
-    allAwardInputs.forEach(function(inp) { if (!inp.value.trim() && allAwardInputs.length > 1) { const row = inp.closest('.award-row'); if (row) row.remove(); } });
+    // Awards are optional — empty rows are filtered on submit (no silent DOM removal)
 
 
     if (!valid) {
@@ -2069,7 +2089,7 @@
       link.href = canvas.toDataURL('image/jpeg', 0.95);
       link.click();
     } catch (err) {
-      alert('Download failed. Please try again.');
+      alert('Download failed: ' + (err.message || 'Unknown error') + '. Please try again or take a screenshot of your ID.');
     } finally {
       if (btn) { btn.disabled = false; if (originalHTML) btn.innerHTML = originalHTML; }
     }
@@ -2083,8 +2103,8 @@
     mobileInput.addEventListener('input', function() {
       // Strip non-digits
       let val = this.value.replace(/[^0-9]/g, '');
-      // Enforce starts with 9
-      if (val.length > 0 && val[0] !== '9') val = val.slice(1);
+      // Enforce starts with 9 — strip all leading non-9 digits (handles paste)
+      while (val.length > 0 && val[0] !== '9') val = val.slice(1);
       // Enforce max 10 digits
       if (val.length > 10) val = val.slice(0, 10);
       this.value = val;
