@@ -1874,6 +1874,23 @@
         return;
       }
 
+      // — Brevo: create contact via secure serverless function —
+      try {
+        await fetch('/api/add-to-brevo', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            email: fd.get('email'),
+            firstName: fd.get('firstName') || '',
+            lastName: fd.get('lastName') || '',
+            memberId: memberId
+          })
+        });
+      } catch (err) {
+        // Non-blocking — Brevo failure should not stop the success screen
+        console.warn('Brevo contact creation failed:', err);
+      }
+
       // — Success: show success screen —
       populateDigitalID(memberId);
       document.getElementById('successScreen').classList.add('visible');
