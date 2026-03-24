@@ -1895,7 +1895,13 @@
           .maybeSingle();
         if (checkError) throw new Error(checkError.message);
         if (existing) {
-          showSubmitError('This email is already registered. Please use a different email address.');
+          const emailErr = document.getElementById('emailError');
+          if (emailErr) {
+            emailErr.textContent = 'This email is already registered. Please use a different email address.';
+            emailErr.classList.add('visible');
+            emailErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit & Join the Crew'; }
           return;
         }
       } catch (err) {
