@@ -611,13 +611,13 @@
 
   /* ERROR STATE */
   input.error, select.error {
-    border-bottom-color: #FF3B3E;
+    border-bottom-color: #FF0004;
   }
 
   .error-msg {
     font-family: 'Roboto Mono', monospace;
     font-size: 11px;
-    color: #FF3B3E;
+    color: #FF0004;
     margin-top: 5px;
     letter-spacing: 0.08em;
     display: none;
@@ -1050,7 +1050,7 @@
     <div class="field-group">
       <label>Email Address <span class="required">*</span></label>
       <input type="email" name="email" id="emailInput" placeholder="your@email.com" required>
-      <div class="field-hint">// For ID delivery updates and announcements</div>
+      <div class="field-hint">// For ID pickup updates and announcements</div>
       <div class="error-msg" id="emailError">Enter a valid email address.</div></div>
 
     <div class="field-group">
@@ -1886,29 +1886,6 @@
         photo_url: photoURL,
         member_id: memberId
       };
-      // — Check for duplicate email —
-      try {
-        const { data: existing, error: checkError } = await supabaseClient
-          .from('members')
-          .select('id')
-          .eq('email', fd.get('email'))
-          .maybeSingle();
-        if (checkError) throw new Error(checkError.message);
-        if (existing) {
-          const emailErr = document.getElementById('emailError');
-          if (emailErr) {
-            emailErr.textContent = 'This email is already registered. Please use a different email address.';
-            emailErr.classList.add('visible');
-            emailErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit & Join the Crew'; }
-          return;
-        }
-      } catch (err) {
-        showSubmitError('Something went wrong. Please try again.');
-        return;
-      }
-
       try {
         const { error } = await supabaseClient.from('members').insert([memberData]);
         if (error) throw new Error(error.message || 'Database error');
