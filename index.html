@@ -1895,7 +1895,7 @@
           .maybeSingle();
         if (checkError) throw new Error(checkError.message);
         if (existing) {
-          showSubmitError('This email is already registered. Contact us if you need help.');
+          showSubmitError('This email is already registered. Please use a different email address.');
           return;
         }
       } catch (err) {
