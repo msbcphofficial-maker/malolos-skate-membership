@@ -1886,6 +1886,23 @@
         photo_url: photoURL,
         member_id: memberId
       };
+      // — Check for duplicate email —
+      try {
+        const { data: existing, error: checkError } = await supabaseClient
+          .from('members')
+          .select('id')
+          .eq('email', fd.get('email'))
+          .maybeSingle();
+        if (checkError) throw new Error(checkError.message);
+        if (existing) {
+          showSubmitError('This email is already registered. Contact us if you need help.');
+          return;
+        }
+      } catch (err) {
+        showSubmitError('Something went wrong. Please try again.');
+        return;
+      }
+
       try {
         const { error } = await supabaseClient.from('members').insert([memberData]);
         if (error) throw new Error(error.message || 'Database error');
