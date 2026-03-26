@@ -1092,8 +1092,21 @@
     </div>
 
     <div class="field-group">
-      <label>Skate Name / Alias <span class="required">*</span></label>
-      <input type="text" name="skateName" placeholder="What they call you at the park" maxlength="10" required>
+      <label>Your Discipline <span class="required">*</span></label>
+      <div class="pill-group">
+        <input type="radio" name="discipline" id="d1" value="Skateboarding" required>
+        <label for="d1">Skateboarding</label>
+        <input type="radio" name="discipline" id="d2" value="Fingerboarding">
+        <label for="d2">Fingerboarding</label>
+        <input type="radio" name="discipline" id="d3" value="Both">
+        <label for="d3">Both</label>
+      </div>
+      <div id="disciplineError" class="error-msg">Please select your discipline.</div>
+    </div>
+
+    <div class="field-group">
+      <label>Skate Name <span class="required">*</span></label>
+      <input type="text" name="skateName" placeholder="Your nickname or alias" maxlength="10" required>
       <div class="field-hint">// Max 10 characters</div>
       <div class="error-msg">Required field.</div></div>
 
@@ -1137,18 +1150,22 @@
         <label for="s4">Freestyle</label>
         <input type="radio" name="style" id="s5" value="Cruising">
         <label for="s5">Cruising</label>
+        <input type="radio" name="style" id="s6" value="Tech">
+        <label for="s6">Tech</label>
+        <input type="radio" name="style" id="s7" value="Realistic">
+        <label for="s7">Realistic</label>
       </div>
       <div class="field-hint" style="margin-top:6px;">// Choose your primary style</div>
       <div id="styleError" class="error-msg">Please choose your skate style.</div></div>
     <div class="field-group">
       <label>Home Spot <span class="required">*</span></label>
-      <input type="text" name="homeSpot" placeholder="Where do you usually skate?" maxlength="25" required>
+      <input type="text" name="homeSpot" placeholder="Where do you usually ride or session?" maxlength="25" required>
       <div class="field-hint">// Max 25 characters</div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
       <label>Your Go-To Trick <span class="required">*</span></label>
-      <input type="text" name="bestTrick" placeholder="Kickflip? Crooked Grind? Nollie Heel?" maxlength="20" required>
+      <input type="text" name="bestTrick" placeholder="Kickflip? Ollie? Laser Flip?" maxlength="20" required>
       <div class="field-hint">// Max 20 characters</div>
       <div class="error-msg">Required field.</div></div>
 
@@ -1805,6 +1822,7 @@
 
     // Validate photo, all radios, and awards
     if (!croppedDataURL) { document.getElementById('photoErrorMsg').classList.add('visible'); valid = false; } else { document.getElementById('photoErrorMsg').classList.remove('visible'); }
+    const disciplineSelected = document.querySelector('input[name="discipline"]:checked'); const disciplineError = document.getElementById('disciplineError'); if (!disciplineSelected) { valid = false; if(disciplineError) disciplineError.classList.add('visible'); } else { if(disciplineError) disciplineError.classList.remove('visible'); }
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
     const idTypeSelected = document.querySelector('input[name="idType"]:checked'); const idTypeError = document.getElementById('idTypeError'); if (!idTypeSelected) { valid = false; if(idTypeError) idTypeError.classList.add('visible'); } else { if(idTypeError) idTypeError.classList.remove('visible'); }
@@ -1874,6 +1892,7 @@
         instagram_handle: fd.get('instagram') || null,
         email: fd.get('email') || null,
         mobile_number: fd.get('phone') || null,
+        discipline: fd.get('discipline') || null,
         skate_name: fd.get('skateName') || null,
         skill_level: fd.get('skillLevel') || null,
         years_skating: fd.get('yearsSkating') || null,
