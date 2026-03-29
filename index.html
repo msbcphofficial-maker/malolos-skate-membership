@@ -2427,5 +2427,12 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+<script>
+/* Limit birthday to today â€” blocks future year navigation */
+(function(){
+  var bd = document.querySelector('input[name="birthday"]');
+  if (bd) bd.max = new Date().toISOString().split('T')[0];
+})();
+</script>
 </body>
 </html>
