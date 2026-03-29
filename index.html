@@ -1379,7 +1379,7 @@
   </div>
   </div>
   <div class="id-footer">
-    <button class="id-download-btn" onclick="downloadDigitalID(this)">
+    <button id="id-download-btn" class="id-download-btn" onclick="downloadDigitalID(this)">
       <i class="ph ph-download-simple" style="font-size:28px;line-height:1;"></i>
       DOWNLOAD DIGITAL ID
     </button>
@@ -2175,16 +2175,19 @@
       // Enforce max 10 digits
       if (val.length > 10) val = val.slice(0, 10);
       this.value = val;
-      // Inline error feedback
+      // Clear error while typing so user isn't nagged mid-entry
       if (mobileError) {
-        if (val.length > 0 && (val[0] !== '9' || val.length !== 10)) {
-          mobileError.textContent = 'Must start with 9 and be exactly 10 digits (e.g. 9171234567).';
-          mobileError.classList.add('visible');
-          this.classList.add('error');
-        } else if (val.length === 10) {
-          mobileError.classList.remove('visible');
-          this.classList.remove('error');
-        }
+        mobileError.classList.remove('visible');
+        this.classList.remove('error');
+      }
+    });
+    // Show error on blur if number is incomplete
+    mobileInput.addEventListener('blur', function() {
+      const val = this.value;
+      if (mobileError && val.length > 0 && val.length !== 10) {
+        mobileError.textContent = 'Must be exactly 10 digits starting with 9 (e.g. 9171234567).';
+        mobileError.classList.add('visible');
+        this.classList.add('error');
       }
     });
   })();
