@@ -925,8 +925,11 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  .msb-spinner{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:msb-spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;flex-shrink:0}
+  @keyframes msb-spin{to{transform:rotate(360deg)}}
 </style>
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 </head>
@@ -1502,7 +1505,7 @@
         </div>
 
         <!-- DONE BUTTON -->
-        <button onclick="showPrintingScreen()" style="
+        <button id="paymentConfirmBtn" onclick="showPrintingScreen()" style="
           width: 100%;
           margin-top: 28px;
           background: #A7D3BF;
@@ -2203,5 +2206,177 @@
   </div>
 </div>
 
+<script>
+(function(){
+'use strict';
+function init(){
+  if(typeof window.Motion==='undefined'){setTimeout(init,50);return;}
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var M=window.Motion;
+  var animate=M.animate, pressAnim=M.press;
+
+  /* â”€â”€ helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  function onceInView(el,kf,opts){
+    el.style.opacity='0';
+    var io=new IntersectionObserver(function(entries){
+      if(!entries[0].isIntersecting)return;
+      animate(el,kf,opts);
+      io.disconnect();
+    },{threshold:0.12});
+    io.observe(el);
+  }
+
+  /* â”€â”€ 1. HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var heroLogo=document.querySelector('.hero > img');
+  var heroH1=document.querySelector('.hero h1');
+  var heroSub=document.querySelector('.hero-sub');
+  if(heroLogo)animate(heroLogo,{opacity:[0,1],scale:[0.8,1]},{duration:0.4,easing:'ease-out'});
+  if(heroH1)animate(heroH1,{opacity:[0,1],y:[30,0]},{duration:0.5,delay:0.1,easing:'ease-out'});
+  if(heroSub)animate(heroSub,{opacity:[0,1],y:[20,0]},{duration:0.4,delay:0.3,easing:'ease-out'});
+
+  /* â”€â”€ 2. SCROLL â€” section labels â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  document.querySelectorAll('.section-label').forEach(function(el){
+    onceInView(el,{opacity:[0,1],y:[20,0]},{duration:0.4,easing:'ease-out'});
+  });
+
+  /* â”€â”€ 3. SCROLL â€” field rows (staggered within parent) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  document.querySelectorAll('.field-row').forEach(function(row){
+    var siblings=Array.from(row.parentElement.querySelectorAll(':scope > .field-row'));
+    var idx=siblings.indexOf(row);
+    onceInView(row,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:idx*0.05,easing:'ease-out'});
+  });
+
+  /* â”€â”€ 4. SCROLL â€” standalone field-groups (not inside field-row) â”€â”€â”€ */
+  document.querySelectorAll('.field-group').forEach(function(fg){
+    if(fg.closest('.field-row'))return;
+    if(fg.id==='photoGroup')return;
+    onceInView(fg,{opacity:[0,1],y:[20,0]},{duration:0.3,easing:'ease-out'});
+  });
+
+  /* â”€â”€ 5. SCROLL â€” photo upload area â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var photoGroup=document.getElementById('photoGroup');
+  if(photoGroup)onceInView(photoGroup,{opacity:[0,1],scale:[0.95,1]},{duration:0.4,easing:'ease-out'});
+
+  /* â”€â”€ 6. SCROLL â€” ID type cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  document.querySelectorAll('.id-cards .id-card').forEach(function(card,i){
+    onceInView(card,{opacity:[0,1],y:[20,0]},{duration:0.4,delay:i*0.1,easing:'ease-out'});
+  });
+
+  /* â”€â”€ 7. GCash reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var gcash=document.getElementById('gcashPaymentSection');
+  if(gcash){
+    new MutationObserver(function(){
+      if(gcash.style.display&&gcash.style.display!=='none')
+        animate(gcash,{opacity:[0,1],y:[-12,0]},{duration:0.3,easing:'ease-out'});
+    }).observe(gcash,{attributes:true,attributeFilter:['style']});
+  }
+
+  /* â”€â”€ 8. PRESS â€” pill labels + ID cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  function addPress(sel){
+    document.querySelectorAll(sel).forEach(function(el){
+      pressAnim(el,function(){
+        animate(el,{scale:0.95},{duration:0.1,easing:'ease-in'});
+        return function(){
+          animate(el,{scale:[0.95,1.02,1]},{duration:0.2,easing:'ease-out'});
+        };
+      });
+    });
+  }
+  addPress('.pill-group label');
+  addPress('.id-cards label.id-card');
+
+  /* â”€â”€ 9. Submit button â€” state animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var submitBtn=document.querySelector('.submit-btn');
+  var successScreen=document.getElementById('successScreen');
+  if(submitBtn){
+    new MutationObserver(function(){
+      if(submitBtn.disabled&&(submitBtn.textContent.indexOf('Submitting')>-1||submitBtn.textContent.indexOf('Processing')>-1)){
+        submitBtn.innerHTML='<span class="msb-spinner"></span>Processing\u2026';
+        animate(submitBtn,{scale:0.97,opacity:0.85},{duration:0.15});
+      }
+    }).observe(submitBtn,{attributes:true,attributeFilter:['disabled']});
+  }
+
+  /* â”€â”€ 10. SUCCESS SCREEN â€” "YOU'RE IN" â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  if(successScreen){
+    var successFired=false;
+    new MutationObserver(function(){
+      if(!successScreen.classList.contains('visible')||successFired)return;
+      successFired=true;
+
+      if(submitBtn){
+        submitBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Done!';
+        animate(submitBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
+      }
+
+      var h1=successScreen.querySelector('h1');
+      var sub=successScreen.querySelector('p');
+      var wrap=successScreen.querySelector('.id-capture-wrapper');
+      var dlBtn=document.getElementById('id-download-btn');
+
+      if(h1)animate(h1,{opacity:[0,1],scale:[0.5,1]},{duration:0.5,easing:'ease-out'});
+      if(sub)animate(sub,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.2,easing:'ease-out'});
+      if(wrap)animate(wrap,{opacity:[0,1],y:[40,0]},{duration:0.5,delay:0.3,easing:'ease-out'});
+      if(dlBtn)animate(dlBtn,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.8,easing:'ease-out'});
+    }).observe(successScreen,{attributes:true,attributeFilter:['class']});
+  }
+
+  /* â”€â”€ 11. Download button â€” press + visual state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var dlBtn=document.getElementById('id-download-btn');
+  if(dlBtn){
+    dlBtn.addEventListener('click',function(){
+      animate(dlBtn,{scale:[1,0.96,1]},{duration:0.2,easing:'ease-out'});
+    });
+  }
+
+  /* â”€â”€ 12. Payment confirm button â€” multi-state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var payBtn=document.getElementById('paymentConfirmBtn');
+  if(payBtn){
+    var origOnclick=payBtn.getAttribute('onclick');
+    payBtn.removeAttribute('onclick');
+    var origPayHTML=payBtn.innerHTML;
+    payBtn.addEventListener('click',function(){
+      payBtn.disabled=true;
+      payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
+      animate(payBtn,{scale:0.97,opacity:0.85},{duration:0.15});
+      setTimeout(function(){
+        payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
+        animate(payBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
+        setTimeout(function(){
+          if(typeof showPrintingScreen==='function')showPrintingScreen();
+        },600);
+      },700);
+    });
+  }
+
+  /* â”€â”€ 13. Printing screen animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  var printingScreen=document.getElementById('printingScreen');
+  if(printingScreen){
+    var printFired=false;
+    new MutationObserver(function(){
+      var vis=printingScreen.style.display&&printingScreen.style.display!=='none';
+      if(!vis||printFired)return;
+      printFired=true;
+
+      var icon=document.getElementById('printerIcon');
+      var allDivs=Array.from(printingScreen.querySelectorAll('div[style]')).filter(function(d){
+        return d.style.fontFamily||d.style.fontSize;
+      });
+
+      if(icon)animate(icon,{opacity:[0,1],scale:[0.7,1.08,1]},{duration:0.4,easing:'ease-out'});
+      allDivs.forEach(function(el,i){
+        animate(el,{opacity:[0,1],y:[15,0]},{duration:0.35,delay:0.1+i*0.08,easing:'ease-out'});
+      });
+    }).observe(printingScreen,{attributes:true,attributeFilter:['style']});
+  }
+
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+}else{
+  init();
+}
+})();
+</script>
 </body>
 </html>
