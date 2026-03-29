@@ -1387,7 +1387,7 @@
 
 
   <!-- GCASH PAYMENT SECTION — only shown if Physical ID was selected -->
-  <div id="gcashPaymentSection" style="display:none; width:100%; max-width:460px; margin-top:32px; animation: fadeUp 0.5s ease both;">
+  <div id="gcashPaymentSection" style="display:none; width:100%; max-width:460px; margin-top:32px;">
 
     <div style="
       border: 2px solid #A7D3BF;
@@ -1578,7 +1578,7 @@
 ">
 
   <!-- Printing icon + headline -->
-  <div style="text-align:center; margin-bottom:40px; animation: fadeUp 0.5s ease both;">
+  <div style="text-align:center; margin-bottom:40px;">
 
     <!-- Animated printer icon -->
     <div style="margin-bottom:24px;">
@@ -1596,7 +1596,7 @@
   <div style="margin-bottom:12px;"></div>
 
   <!-- Download Digital ID block -->
-  <div style="width:100%; max-width:460px; animation: fadeUp 0.6s ease 0.15s both;">
+  <div style="width:100%; max-width:460px;">
 
     <div style="
       border: 2px solid rgba(167,211,191,0.4);
@@ -2323,11 +2323,12 @@ function init(){
       var sub=successScreen.querySelector('p');
       var wrap=successScreen.querySelector('.id-capture-wrapper');
       var dlBtn=document.getElementById('id-download-btn');
+      var isPhysical=document.getElementById('idPhysical')&&document.getElementById('idPhysical').checked;
 
       if(h1)animate(h1,{opacity:[0,1],scale:[0.5,1]},{duration:0.5,easing:'ease-out'});
       if(sub)animate(sub,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.2,easing:'ease-out'});
-      if(wrap)animate(wrap,{opacity:[0,1],y:[40,0]},{duration:0.5,delay:0.3,easing:'ease-out'});
-      if(dlBtn)animate(dlBtn,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.8,easing:'ease-out'});
+      if(!isPhysical&&wrap)animate(wrap,{opacity:[0,1],y:[40,0]},{duration:0.5,delay:0.3,easing:'ease-out'});
+      if(!isPhysical&&dlBtn)animate(dlBtn,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.8,easing:'ease-out'});
     }).observe(successScreen,{attributes:true,attributeFilter:['class']});
   }
 
