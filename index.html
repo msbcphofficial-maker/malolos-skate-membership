@@ -2285,9 +2285,9 @@ function init(){
   function addPress(sel){
     document.querySelectorAll(sel).forEach(function(el){
       pressAnim(el,function(){
-        animate(el,{scale:0.95},{duration:0.1,easing:'ease-in'});
+        animate(el,{scale:0.88},{type:'spring',stiffness:1000});
         return function(){
-          animate(el,{scale:[0.95,1.02,1]},{duration:0.2,easing:'ease-out'});
+          animate(el,{scale:1},{type:'spring',stiffness:500,damping:8});
         };
       });
     });
