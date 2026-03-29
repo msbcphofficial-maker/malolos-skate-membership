@@ -2272,14 +2272,6 @@ function init(){
     onceInView(card,{opacity:[0,1],y:[20,0]},{duration:0.4,delay:i*0.1,easing:'ease-out'});
   });
 
-  /* â”€â”€ 7. GCash reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  var gcash=document.getElementById('gcashPaymentSection');
-  if(gcash){
-    new MutationObserver(function(){
-      if(gcash.style.display&&gcash.style.display!=='none')
-        animate(gcash,{opacity:[0,1],y:[-12,0]},{duration:0.3,easing:'ease-out'});
-    }).observe(gcash,{attributes:true,attributeFilter:['style']});
-  }
 
   /* â”€â”€ 8. PRESS â€” pill labels + ID cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   function addPress(sel){
