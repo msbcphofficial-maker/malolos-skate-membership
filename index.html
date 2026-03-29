@@ -932,10 +932,13 @@
   .char-wrap { position:relative; display:block; }
   .char-wrap input { padding-right:46px !important; }
   .char-counter {
-    position:absolute; right:12px; top:50%; transform:translateY(-50%);
+    position:absolute; right:12px; top:0; height:100%;
+    display:flex; align-items:center;
     font-family:'Roboto Mono',monospace; font-size:13px; line-height:1;
     color:rgba(240,237,232,0.28); pointer-events:none; user-select:none;
-    will-change:transform;
+  }
+  .char-counter .char-num {
+    display:inline-block; will-change:transform;
   }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
@@ -1141,7 +1144,7 @@
 
     <div class="field-group">
       <label>Skate Name <span class="required">*</span></label>
-      <div class="char-wrap"><input type="text" name="skateName" placeholder="Your nickname or alias" maxlength="10" required><span class="char-counter" data-max="10">10</span></div>
+      <div class="char-wrap"><input type="text" name="skateName" placeholder="Your nickname or alias" maxlength="10" required><span class="char-counter" data-max="10"><span class="char-num">10</span></span></div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
@@ -1193,12 +1196,12 @@
       <div id="styleError" class="error-msg">Please choose your skate style.</div></div>
     <div class="field-group">
       <label>Home Spot <span class="required">*</span></label>
-      <div class="char-wrap"><input type="text" name="homeSpot" placeholder="Where do you usually ride or session?" maxlength="25" required><span class="char-counter" data-max="25">25</span></div>
+      <div class="char-wrap"><input type="text" name="homeSpot" placeholder="Where do you usually ride or session?" maxlength="25" required><span class="char-counter" data-max="25"><span class="char-num">25</span></span></div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
       <label>Your Go-To Trick <span class="required">*</span></label>
-      <div class="char-wrap"><input type="text" name="bestTrick" placeholder="Kickflip? Ollie? Laser Flip?" maxlength="20" required><span class="char-counter" data-max="20">20</span></div>
+      <div class="char-wrap"><input type="text" name="bestTrick" placeholder="Kickflip? Ollie? Laser Flip?" maxlength="20" required><span class="char-counter" data-max="20"><span class="char-num">20</span></span></div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
@@ -2404,13 +2407,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function update() {
       var rem = max - input.value.length;
-      counter.textContent = rem;
+      counter.querySelector('.char-num').textContent = rem;
       counter.style.color = getColor(rem);
 
       /* Spring pop â€” only when nearing the limit */
       if (rem <= 6 && window.Motion) {
         var mapVel = window.Motion.transform([0, 5], [50, 0]);
-        window.Motion.animate(counter, { scale: 1 }, {
+        window.Motion.animate(counter.querySelector('.char-num'), { scale: 1 }, {
           type:      'spring',
           velocity:  mapVel(rem),
           stiffness: 700,
