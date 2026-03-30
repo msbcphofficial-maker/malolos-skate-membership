@@ -883,6 +883,29 @@
   .id-download-btn:hover { background: var(--sage-light); transform: translateY(-2px); }
   .id-download-btn svg { width: 18px; height: 18px; }
   .id-download-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.4s; } .id-download-btn:hover::before { left: 100%; } .id-download-btn:active { transform: translateY(0); }
+
+  /* Upgrade to Physical ID button */
+  .upgrade-to-physical-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 14px 20px;
+    background: #212D40;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #A7D3BF;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    font-size: clamp(13px, 3.5vw, 15px);
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    text-transform: uppercase;
+  }
+  .upgrade-to-physical-btn:hover { background: #2a3d56; border-color: rgba(255,255,255,0.45); }
+
   .success-actions {
     margin-top: 36px;
     margin-bottom: 8px;
@@ -1380,8 +1403,12 @@
   </div>
   <div class="id-footer">
     <button id="id-download-btn" class="id-download-btn" onclick="downloadDigitalID(this)">
-      <i class="ph ph-download-simple" style="font-size:28px;line-height:1;"></i>
+      <i class="ph ph-download-simple" style="font-size:28px;line-height:1;" aria-hidden="true"></i>
       DOWNLOAD DIGITAL ID
+    </button>
+    <button class="upgrade-to-physical-btn" onclick="showUpgradeModal()" aria-label="Upgrade to Physical ID">
+      <i class="ph ph-identification-card" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
+      UPGRADE TO PHYSICAL ID
     </button>
   </div>
 
@@ -1670,6 +1697,50 @@
     });
   }
 
+  // ── UPGRADE TO PHYSICAL ID ──
+  function showUpgradeModal() {
+    const modal = document.getElementById('upgradeModal');
+    const ack   = document.getElementById('upgradeAck');
+    const btn   = document.getElementById('upgradeConfirmBtn');
+    if (ack) ack.checked = false;
+    if (btn) { btn.disabled = true; btn.setAttribute('aria-disabled','true'); btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; }
+    if (modal) modal.style.display = 'flex';
+  }
+
+  function closeUpgradeModal() {
+    const modal = document.getElementById('upgradeModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function toggleUpgradeConfirmBtn() {
+    const ack = document.getElementById('upgradeAck');
+    const btn = document.getElementById('upgradeConfirmBtn');
+    if (!ack || !btn) return;
+    if (ack.checked) {
+      btn.disabled = false;
+      btn.setAttribute('aria-disabled','false');
+      btn.style.opacity = '1';
+      btn.style.cursor  = 'pointer';
+    } else {
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled','true');
+      btn.style.opacity = '0.4';
+      btn.style.cursor  = 'not-allowed';
+    }
+  }
+
+  function confirmUpgrade() {
+    closeUpgradeModal();
+    window._isUpgrade = true;
+    const gcashSection = document.getElementById('gcashPaymentSection');
+    if (gcashSection) {
+      gcashSection.style.display = 'block';
+      setTimeout(function() {
+        gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
+
   // Show printing screen
   function showPrintingScreen() {
     // Clone the real digital ID card into the printing screen preview
@@ -1903,6 +1974,7 @@
       // — Supabase submission —
       const generatedIdNum = String(Math.floor(Math.random() * 9000) + 1000);
       const memberId = '2026' + generatedIdNum;
+      window._memberId = memberId; // stored for upgrade flow
       const memberData = {
         first_name: fd.get('firstName') || null,
         last_name: fd.get('lastName') || null,
@@ -2205,6 +2277,74 @@
   });
 </script>
 <!-- CROP MODAL -->
+<!-- UPGRADE TO PHYSICAL ID MODAL -->
+<div id="upgradeModal" role="dialog" aria-modal="true" aria-label="Upgrade to Physical ID" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
+  <div style="max-width:460px; width:100%; background:var(--navy-mid); border:1px solid var(--sage); padding:28px 24px 24px; display:flex; flex-direction:column; gap:0; position:relative;">
+
+    <!-- Close -->
+    <button onclick="closeUpgradeModal()" aria-label="Close upgrade modal" style="position:absolute; top:14px; right:14px; background:none; border:none; color:var(--sage); cursor:pointer; padding:4px; line-height:1;">
+      <i class="ph ph-x" style="font-size:22px;" aria-hidden="true"></i>
+    </button>
+
+    <!-- Heading -->
+    <div style="font-family:'Anton', sans-serif; font-size:clamp(20px,5vw,26px); color:var(--sage); letter-spacing:0.08em; margin-bottom:20px; padding-right:32px;">UPGRADE TO PHYSICAL ID</div>
+
+    <!-- Info rows -->
+    <div class="pickup-info-row">
+      <span class="pickup-info-label">Pickup</span>
+      <span class="pickup-info-value" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
+        Explore Co. 100 A. Mabini, Malolos, Bulacan
+        <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size:14px;white-space:nowrap;opacity:0.85;">
+          <i class="ph ph-map-pin" style="font-size:14px;" aria-hidden="true"></i>Directions
+        </a>
+      </span>
+    </div>
+    <div class="pickup-info-row">
+      <span class="pickup-info-label">Ready in</span>
+      <span class="pickup-info-value">7 Days</span>
+    </div>
+    <div class="pickup-info-row">
+      <span class="pickup-info-label">Payment</span>
+      <span class="pickup-info-value">GCash</span>
+    </div>
+
+    <!-- Helper text -->
+    <div class="field-hint" style="margin-top:16px;">// We'll reach out with payment and pickup details after you submit.</div>
+    <div class="field-hint" style="margin-top:8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
+
+    <!-- Acknowledgment -->
+    <div style="margin-top:18px; display:flex; align-items:flex-start; gap:8px;">
+      <input type="checkbox" id="upgradeAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;" onchange="toggleUpgradeConfirmBtn()">
+      <label for="upgradeAck" style="font-family:'Roboto Mono', monospace; font-size:11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none; letter-spacing:0.04em;">I UNDERSTAND THAT PHYSICAL ID REQUIRES ₱250 GCASH PAYMENT AND PICKUP AT EXPLORE CO. 100 A. MABINI, MALOLOS, BULACAN.</label>
+    </div>
+
+    <!-- Confirm button -->
+    <button id="upgradeConfirmBtn" onclick="confirmUpgrade()" disabled aria-disabled="true" style="
+      width: 100%;
+      margin-top: 20px;
+      background: #A7D3BF;
+      color: #0f1720;
+      border: none;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: clamp(13px, 3.5vw, 16px);
+      letter-spacing: 0.2em;
+      padding: 14px;
+      cursor: not-allowed;
+      opacity: 0.4;
+      transition: opacity 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    ">
+      <i class="ph ph-identification-card" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
+      YES, I WANT A PHYSICAL ID
+    </button>
+
+  </div>
+</div>
+
 <div id="cropModal" role="dialog" aria-modal="true" aria-label="Crop your photo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
   <div style="max-width:420px; width:100%; background:var(--navy-mid); border:1px solid var(--sage); padding:24px; display:flex; flex-direction:column; gap:16px;">
     <div style="font-family:'Anton', sans-serif; font-size:1.4em; color:var(--sage); letter-spacing:0.1em;">Crop Your Photo</div>
@@ -2345,7 +2485,13 @@ function init(){
       payBtn.disabled=true;
       payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
       animate(payBtn,{scale:0.97,opacity:0.85},{duration:0.15});
-      setTimeout(function(){
+      setTimeout(async function(){
+        // If this is an upgrade, update the member's id_type in Supabase
+        if(window._isUpgrade && window._memberId){
+          try{
+            await supabaseClient.from('members').update({id_type:'physical'}).eq('member_id',window._memberId);
+          }catch(e){ /* non-blocking */ }
+        }
         payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
         animate(payBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
         setTimeout(function(){
