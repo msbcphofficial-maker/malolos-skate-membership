@@ -1636,9 +1636,6 @@
           Save your digital ID now and flex it while your physical card gets printed.
         </div>
 
-        <!-- Digital ID full preview — cloned from the real card -->
-        <div id="printingScreenIDPreview" style="margin-bottom:20px; width:100%;"></div>
-
         <!-- Download button -->
         <button onclick="downloadDigitalID(this)" style="
           width: 100%;
@@ -1744,20 +1741,6 @@
 
   // Show printing screen
   function showPrintingScreen() {
-    // Clone the real digital ID card into the printing screen preview
-    const realCard = document.getElementById('idCaptureWrapper');
-    const previewSlot = document.getElementById('printingScreenIDPreview');
-    if (realCard && previewSlot) {
-      previewSlot.innerHTML = '';
-      const clone = realCard.cloneNode(true);
-      // Remove the download button from the clone if it exists inside
-      const cloneFooter = clone.querySelector('.id-footer');
-      if (cloneFooter) cloneFooter.remove();
-      // Strip the id so there's no duplicate id conflict
-      clone.removeAttribute('id');
-      previewSlot.appendChild(clone);
-    }
-
     const printScreen = document.getElementById('printingScreen');
     if (printScreen) {
       printScreen.style.display = 'flex';
