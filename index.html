@@ -2111,7 +2111,7 @@
   // ── DOWNLOAD DIGITAL ID ──
   async function downloadDigitalID(btn) {
     const originalHTML = btn ? btn.innerHTML : null;
-    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Generating your ID...'; }
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="msb-spinner"></span>Generating your ID...'; }
 
     try {
       // Load html2canvas with a 10-second timeout
