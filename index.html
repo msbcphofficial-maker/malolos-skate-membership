@@ -2012,6 +2012,26 @@
         console.warn('Brevo contact creation failed:', err);
       }
 
+      // — Notify admin for physical ID members —
+      if (fd.get('idType') === 'physical') {
+        try {
+          await fetch('/api/notify-physical-id', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              firstName: fd.get('firstName') || '',
+              lastName: fd.get('lastName') || '',
+              email: fd.get('email') || '',
+              memberId: memberId,
+              barangay: fd.get('barangay') || '',
+              skateName: fd.get('skateName') || ''
+            })
+          });
+        } catch (err) {
+          console.warn('Physical ID notification failed:', err);
+        }
+      }
+
       // — Success: show success screen —
       populateDigitalID(memberId);
       document.getElementById('successScreen').classList.add('visible');
