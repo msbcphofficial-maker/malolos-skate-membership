@@ -1565,6 +1565,7 @@
           <i class="ph-bold ph-check" style="font-size:20px;flex-shrink:0;"></i>
           I'VE SENT MY PAYMENT
         </button>
+        <div id="gcashConfirmError" style="display:none; font-family:'Roboto Mono',monospace; font-size:12px; color:#FF6B6B; text-align:center; margin-top:12px; letter-spacing:0.05em;"></div>
 
       </div>
     </div>
@@ -1979,6 +1980,7 @@
         go_to_trick: fd.get('bestTrick') || null,
         awards: awardVals.length ? awardVals.join(', ') : null,
         id_type: fd.get('idType') || null,
+        payment_status: fd.get('idType') === 'physical' ? 'unpaid' : null,
         photo_url: photoURL,
         member_id: memberId
       };
@@ -2466,15 +2468,28 @@ function init(){
     payBtn.removeAttribute('onclick');
     var origPayHTML=payBtn.innerHTML;
     payBtn.addEventListener('click',function(){
+      var errEl=document.getElementById('gcashConfirmError');
+      if(errEl) errEl.style.display='none';
       payBtn.disabled=true;
       payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
       animate(payBtn,{scale:0.97,opacity:0.85},{duration:0.15});
       setTimeout(async function(){
-        // If this is an upgrade, update the member's id_type in Supabase
+        // If this is an upgrade, update id_type and payment_status in Supabase
         if(window._isUpgrade && window._memberId){
           try{
-            await supabaseClient.from('members').update({id_type:'physical'}).eq('member_id',window._memberId);
-          }catch(e){ /* non-blocking */ }
+            const{error}=await supabaseClient
+              .from('members')
+              .update({id_type:'physical',payment_status:'unpaid'})
+              .eq('member_id',window._memberId);
+            if(error) throw new Error(error.message||'Update failed');
+          }catch(e){
+            // Re-enable button and show error — do NOT proceed to printing screen
+            payBtn.disabled=false;
+            payBtn.innerHTML=origPayHTML;
+            animate(payBtn,{scale:1,opacity:1},{duration:0.2});
+            if(errEl){errEl.textContent='Something went wrong updating your record. Please try again.';errEl.style.display='block';}
+            return;
+          }
         }
         payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
         animate(payBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
