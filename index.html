@@ -2477,11 +2477,12 @@ function init(){
         // If this is an upgrade, update id_type and payment_status in Supabase
         if(window._isUpgrade && window._memberId){
           try{
-            const{error}=await supabaseClient
+            const{data,error}=await supabaseClient
               .from('members')
               .update({id_type:'physical',payment_status:'unpaid'})
-              .eq('member_id',window._memberId);
-            if(error) throw new Error(error.message||'Update failed');
+              .eq('member_id',window._memberId)
+              .select();
+            if(error||!data?.length) throw new Error(error?.message||'Update failed');
           }catch(e){
             // Re-enable button and show error — do NOT proceed to printing screen
             payBtn.disabled=false;
