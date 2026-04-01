@@ -2042,14 +2042,17 @@
       const selectedIdType = document.querySelector('input[name="idType"]:checked');
       const gcashSection = document.getElementById('gcashPaymentSection');
       const idCardWrapper = document.getElementById('idCaptureWrapper');
+      const upgradeBtn = document.querySelector('.upgrade-to-physical-btn');
       if (selectedIdType && selectedIdType.value === 'physical') {
         if (idCardWrapper) idCardWrapper.style.display = 'none';
+        if (upgradeBtn) upgradeBtn.style.display = 'none';
         if (gcashSection) {
           gcashSection.style.display = 'block';
           setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
         }
       } else {
         if (idCardWrapper) idCardWrapper.style.display = '';
+        if (upgradeBtn) upgradeBtn.style.display = '';
         if (gcashSection) gcashSection.style.display = 'none';
       }
     })();
