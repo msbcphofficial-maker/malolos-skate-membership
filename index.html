@@ -1960,24 +1960,16 @@
       }
 
       // — Supabase submission —
-      // Generate sequential member ID by finding the current highest number
-      let nextIdNum = 1001;
+      // Generate member ID atomically via Postgres sequence (race-condition safe)
+      let memberId;
       try {
-        const { data: idRows } = await supabaseClient
-          .from('members')
-          .select('member_id')
-          .like('member_id', '2026-%')
-          .order('member_id', { ascending: false })
-          .limit(1);
-        if (idRows && idRows.length > 0) {
-          const lastNum = parseInt(idRows[0].member_id.split('-')[1], 10);
-          if (!isNaN(lastNum)) nextIdNum = lastNum + 1;
-        }
+        const { data: idData, error: idError } = await supabaseClient.rpc('get_next_member_id');
+        if (idError || !idData) throw new Error('ID generation failed');
+        memberId = idData;
       } catch (e) {
-        // Fall back to a random number if the query fails
-        nextIdNum = Math.floor(Math.random() * 9000) + 1000;
+        // Fall back to a random number if the RPC fails
+        memberId = '2026-' + String(Math.floor(Math.random() * 9000) + 1000);
       }
-      const memberId = '2026-' + String(nextIdNum);
       window._memberId = memberId; // stored for upgrade flow
       const memberData = {
         first_name: fd.get('firstName') || null,
