@@ -37,7 +37,7 @@ export default async function handler(req, res) {
             <table style="width:100%; border-collapse:collapse; font-size:13px; font-family:'Roboto Mono',monospace;">
               <tr><td style="padding:8px 0; color:rgba(167,211,191,0.7); width:140px;">Member ID</td><td style="padding:8px 0; color:#f0ede8;">${memberId}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Name</td><td style="padding:8px 0;">${memberName}</td></tr>
-              <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Email</td><td style="padding:8px 0;">${email || '—'}</td></tr>
+              <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Email</td><td style="padding:8px 0;">${email ? `<a href="mailto:${email}" style="color:#f0ede8; text-decoration:underline;">${email}</a>` : '—'}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Barangay</td><td style="padding:8px 0;">${barangay || '—'}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Skate Name</td><td style="padding:8px 0;">${skateName || '—'}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">ID Type</td><td style="padding:8px 0; color:#A7D3BF;">Physical ID · ₱250 GCash</td></tr>
