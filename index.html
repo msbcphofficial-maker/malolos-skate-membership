@@ -1960,8 +1960,24 @@
       }
 
       // — Supabase submission —
-      const generatedIdNum = String(Math.floor(Math.random() * 9000) + 1000);
-      const memberId = '2026-' + generatedIdNum;
+      // Generate sequential member ID by finding the current highest number
+      let nextIdNum = 1001;
+      try {
+        const { data: idRows } = await supabaseClient
+          .from('members')
+          .select('member_id')
+          .like('member_id', '2026-%')
+          .order('member_id', { ascending: false })
+          .limit(1);
+        if (idRows && idRows.length > 0) {
+          const lastNum = parseInt(idRows[0].member_id.split('-')[1], 10);
+          if (!isNaN(lastNum)) nextIdNum = lastNum + 1;
+        }
+      } catch (e) {
+        // Fall back to a random number if the query fails
+        nextIdNum = Math.floor(Math.random() * 9000) + 1000;
+      }
+      const memberId = '2026-' + String(nextIdNum);
       window._memberId = memberId; // stored for upgrade flow
       const memberData = {
         first_name: fd.get('firstName') || null,
