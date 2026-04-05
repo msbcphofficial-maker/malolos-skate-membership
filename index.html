@@ -1924,6 +1924,16 @@
     // Awards are optional — empty rows are filtered on submit (no silent DOM removal)
 
 
+    // Blocked names
+    const blockedNames = ['russ alcoriza', 'russell alcoriza'];
+    const fullNameInput = ((document.querySelector('[name="firstName"]') || {}).value || '').trim().toLowerCase()
+      + ' ' + ((document.querySelector('[name="lastName"]') || {}).value || '').trim().toLowerCase();
+    if (blockedNames.some(n => fullNameInput.includes(n))) {
+      const submitErrEl2 = document.getElementById('submitError');
+      if (submitErrEl2) { submitErrEl2.textContent = 'You are not allowed to sign up for this membership.'; submitErrEl2.style.display = 'block'; submitErrEl2.classList.add('visible'); }
+      return;
+    }
+
     if (!valid) {
       const firstErr = document.querySelector('.error, .error-msg.visible');
       if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
