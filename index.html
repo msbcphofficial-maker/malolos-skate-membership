@@ -2594,7 +2594,7 @@ function init(){
         // — Update Supabase record —
         payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
         try{
-          var updateFields = {payment_status:'unpaid'};
+          var updateFields = {payment_status:'paid'};
           if(receiptUrl) updateFields.gcash_receipt_url = receiptUrl;
           if(window._isUpgrade) { updateFields.id_type='physical'; }
           const{data,error}=await supabaseClient
