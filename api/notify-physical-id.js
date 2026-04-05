@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { firstName, lastName, email, memberId, barangay, skateName } = req.body;
+  const { firstName, lastName, email, memberId, barangay, skateName, gcashReceiptUrl } = req.body;
 
   if (!firstName || !lastName || !memberId) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -41,11 +41,8 @@ export default async function handler(req, res) {
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Barangay</td><td style="padding:8px 0;">${barangay || '—'}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">Skate Name</td><td style="padding:8px 0;">${skateName || '—'}</td></tr>
               <tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">ID Type</td><td style="padding:8px 0; color:#A7D3BF;">Physical ID · ₱250 GCash</td></tr>
+              ${gcashReceiptUrl ? `<tr style="border-top:1px solid rgba(167,211,191,0.15);"><td style="padding:8px 0; color:rgba(167,211,191,0.7);">GCash Receipt</td><td style="padding:8px 0;"><a href="${gcashReceiptUrl}" download style="display:inline-flex; align-items:center; gap:6px; color:#A7D3BF; text-decoration:none; font-family:'Roboto Mono',monospace; font-size:13px; border:1px solid rgba(167,211,191,0.4); padding:6px 12px;">&#x2B07; Download Receipt</a></td></tr>` : ''}
             </table>
-
-            <div style="margin-top:28px; padding:16px; background:rgba(167,211,191,0.08); border-left:3px solid #A7D3BF; font-size:12px; font-family:'Roboto Mono',monospace; color:rgba(167,211,191,0.8); line-height:1.7;">
-              Reach out to this member to collect GCash payment and arrange pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.
-            </div>
           </div>
         `
       })

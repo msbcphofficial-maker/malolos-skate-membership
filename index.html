@@ -2081,24 +2081,16 @@
         console.warn('Brevo contact creation failed:', err);
       }
 
-      // — Notify admin for physical ID members —
+      // — Store member info for later notify (sent after receipt upload) —
       if (fd.get('idType') === 'physical') {
-        try {
-          await fetch('/api/notify-physical-id', {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-              firstName: fd.get('firstName') || '',
-              lastName: fd.get('lastName') || '',
-              email: fd.get('email') || '',
-              memberId: memberId,
-              barangay: fd.get('barangay') || '',
-              skateName: fd.get('skateName') || ''
-            })
-          });
-        } catch (err) {
-          console.warn('Physical ID notification failed:', err);
-        }
+        window._memberNotifyData = {
+          firstName: fd.get('firstName') || '',
+          lastName: fd.get('lastName') || '',
+          email: fd.get('email') || '',
+          memberId: memberId,
+          barangay: fd.get('barangay') || '',
+          skateName: fd.get('skateName') || ''
+        };
       }
 
       // — Success: show success screen —
@@ -2610,6 +2602,17 @@ function init(){
           animate(payBtn,{scale:1,opacity:1},{duration:0.2});
           if(errEl){errEl.textContent='Something went wrong updating your record. Please try again.';errEl.style.display='block';}
           return;
+        }
+
+        // — Notify admin with receipt URL —
+        if(window._memberNotifyData){
+          try{
+            await fetch('/api/notify-physical-id', {
+              method: 'POST',
+              headers: {'content-type':'application/json'},
+              body: JSON.stringify(Object.assign({}, window._memberNotifyData, { gcashReceiptUrl: receiptUrl || '' }))
+            });
+          }catch(e){ console.warn('Notify failed:', e); }
         }
 
         payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
