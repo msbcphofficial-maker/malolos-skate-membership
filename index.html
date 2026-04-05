@@ -1977,6 +1977,23 @@
         return;
       }
 
+      // — Check for duplicate email —
+      try {
+        const emailVal = fd.get('email') || '';
+        const { data: existing } = await supabaseClient
+          .from('members')
+          .select('member_id')
+          .eq('email', emailVal.trim())
+          .limit(1);
+        if (existing && existing.length > 0) {
+          showSubmitError('This email is already registered. Each member can only sign up once.');
+          return;
+        }
+      } catch (e) {
+        // Non-blocking — if check fails, allow submission to proceed
+        console.warn('Duplicate email check failed:', e);
+      }
+
       // — Supabase submission —
       // Generate member ID atomically via Postgres sequence (race-condition safe)
       let memberId;
