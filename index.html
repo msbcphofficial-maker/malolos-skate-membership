@@ -2589,12 +2589,11 @@ function init(){
           var updateFields = {payment_status:'paid'};
           if(receiptUrl) updateFields.gcash_receipt_url = receiptUrl;
           if(window._isUpgrade) { updateFields.id_type='physical'; }
-          const{data,error}=await supabaseClient
+          const{error}=await supabaseClient
             .from('members')
             .update(updateFields)
-            .eq('member_id',window._memberId)
-            .select();
-          if(error||!data?.length) throw new Error(error?.message||'Update failed');
+            .eq('member_id',window._memberId);
+          if(error) throw new Error(error.message||'Update failed');
         }catch(e){
           payBtn.disabled=false;
           payBtn.innerHTML=origPayHTML;
