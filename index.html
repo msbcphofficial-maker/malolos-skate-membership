@@ -1501,58 +1501,46 @@
           </div>
         </div>
 
-        <!-- Instructions -->
+        <!-- Receipt Upload -->
         <div style="margin-bottom:20px;">
-          <div style="font-family:'Barlow', sans-serif; font-weight:700; font-size: 12px; letter-spacing:0.2em; color:#A7D3BF; margin-bottom:10px; text-transform:uppercase;">After Paying — Send Your Receipt</div>
-          <div style="font-family:'Roboto Mono', monospace; font-size: 12px; color:rgba(197,217,209,0.7); line-height:2; letter-spacing:0.05em;">
-            1. Screenshot your GCash receipt<br>
-            2. Include your <span style="color:#9dbdad;">Full Name</span> in the message<br>
-            3. DM your receipt to either:
+          <div style="font-family:'Barlow', sans-serif; font-weight:700; font-size:12px; letter-spacing:0.2em; color:#A7D3BF; margin-bottom:10px; text-transform:uppercase;">Upload Your GCash Receipt</div>
+          <div style="font-family:'Roboto Mono', monospace; font-size:12px; color:rgba(197,217,209,0.7); line-height:1.8; letter-spacing:0.05em; margin-bottom:14px;">
+            Take a screenshot of your GCash receipt and upload it below to confirm your payment.
           </div>
+
+          <!-- Upload area -->
+          <div id="receiptUploadArea" onclick="document.getElementById('receiptFileInput').click()" style="
+            border: 2px dashed rgba(167,211,191,0.4);
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            margin-bottom: 10px;
+          " onmouseover="this.style.borderColor='#A7D3BF'; this.style.background='rgba(167,211,191,0.05)'" onmouseout="this.style.borderColor='rgba(167,211,191,0.4)'; this.style.background='transparent'">
+            <i class="ph ph-upload-simple" style="font-size:28px; color:#A7D3BF; display:block; margin-bottom:8px;"></i>
+            <div style="font-family:'Roboto Mono',monospace; font-size:12px; color:rgba(197,217,209,0.7); letter-spacing:0.05em;">Tap to upload receipt</div>
+            <div style="font-family:'Roboto Mono',monospace; font-size:10px; color:rgba(197,217,209,0.4); letter-spacing:0.05em; margin-top:4px;">JPG or PNG · Max 10MB</div>
+          </div>
+          <input type="file" id="receiptFileInput" accept="image/*" style="display:none;" onchange="handleReceiptUpload(this)">
+
+          <!-- Preview -->
+          <div id="receiptPreview" style="display:none; position:relative; margin-bottom:10px;">
+            <img id="receiptPreviewImg" src="" alt="GCash Receipt" style="width:100%; border:1px solid rgba(167,211,191,0.3); display:block;">
+            <button onclick="clearReceiptUpload()" style="position:absolute; top:8px; right:8px; background:rgba(15,23,32,0.85); border:1px solid rgba(167,211,191,0.4); color:#A7D3BF; width:28px; height:28px; cursor:pointer; display:flex; align-items:center; justify-content:center;" aria-label="Remove receipt">
+              <i class="ph ph-x" style="font-size:14px;"></i>
+            </button>
+          </div>
+          <div id="receiptUploadStatus" style="font-family:'Roboto Mono',monospace; font-size:11px; color:rgba(197,217,209,0.6); letter-spacing:0.05em; min-height:16px;"></div>
         </div>
 
-        <!-- DM buttons -->
-        <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <a href="https://www.facebook.com/malolos.skateandbike.community/" target="_blank" rel="noopener noreferrer" style="
-            flex:1; min-width:140px;
-            display:flex; align-items:center; justify-content:center; gap:8px;
-            background: #1877F2;
-            color: #fff;
-            font-family:'Barlow', sans-serif;
-            font-weight:700; font-size: 15px; letter-spacing:0.1em;
-            padding: 12px 16px;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: opacity 0.2s;
-          " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-            <i class="ph-fill ph-facebook-logo" style="font-size:16px;flex-shrink:0;"></i>
-            Facebook
-          </a>
-          <a href="https://www.instagram.com/skateandbikemalolos" target="_blank" rel="noopener noreferrer" style="
-            flex:1; min-width:140px;
-            display:flex; align-items:center; justify-content:center; gap:8px;
-            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-            color: #fff;
-            font-family:'Barlow', sans-serif;
-            font-weight:700; font-size: 15px; letter-spacing:0.1em;
-            padding: 12px 16px;
-            text-decoration: none;
-            text-transform: uppercase;
-            transition: opacity 0.2s;
-          " onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-            <i class="ph ph-instagram-logo" style="font-size:16px;flex-shrink:0;"></i>
-            Instagram
-          </a>
-        </div>
-
-        <div style="font-family:'Roboto Mono', monospace; font-size: 11px; color:rgba(167,211,191,0.75); letter-spacing:0.08em; margin-top:16px; line-height:1.9;">
+        <div style="font-family:'Roboto Mono', monospace; font-size: 11px; color:rgba(167,211,191,0.75); letter-spacing:0.08em; margin-bottom:20px; line-height:1.9;">
           <div style="font-family:'Barlow', sans-serif; font-weight:700; font-size:12px; letter-spacing:0.2em; color:#A7D3BF; text-transform:uppercase; margin-bottom:8px;">IMPORTANT</div>
-          <div style="margin-bottom:10px;">1. Send your GCash receipt to our Facebook or Instagram so we can verify your payment. Your physical ID will not be processed without a confirmed receipt.</div>
-          <div>2. We'll reach out via email when your ID is ready for pickup at Explore Co., 100 A. Mabini, Malolos, Bulacan.</div>
+          <div>We'll reach out via email when your ID is ready for pickup at Explore Co., 100 A. Mabini, Malolos, Bulacan.</div>
         </div>
 
         <!-- DONE BUTTON -->
-        <button id="paymentConfirmBtn" onclick="showPrintingScreen()" style="
+        <button id="paymentConfirmBtn" disabled style="
+          opacity: 0.4; cursor: not-allowed;
           width: 100%;
           margin-top: 28px;
           background: #A7D3BF;
@@ -1563,14 +1551,13 @@
           font-size: clamp(14px, 4vw, 23px);
           letter-spacing: 0.2em;
           padding: 16px;
-          cursor: pointer;
-          transition: background 0.2s, transform 0.15s;
+          transition: background 0.2s, transform 0.15s, opacity 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
           white-space: nowrap;
-        " onmouseover="this.style.background='#9dbdad'" onmouseout="this.style.background='#A7D3BF'" onmousedown="this.style.transform='translateY(1px)'" onmouseup="this.style.transform='translateY(0)'">
+        " onmouseover="if(!this.disabled){this.style.background='#9dbdad'}" onmouseout="if(!this.disabled){this.style.background='#A7D3BF'}" onmousedown="if(!this.disabled){this.style.transform='translateY(1px)'}" onmouseup="if(!this.disabled){this.style.transform='translateY(0)'}">
           <i class="ph-bold ph-check" style="font-size:20px;flex-shrink:0;"></i>
           I'VE SENT MY PAYMENT
         </button>
@@ -1705,6 +1692,45 @@
         icon.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
       }, 2000);
     });
+  }
+
+  // ── GCASH RECEIPT UPLOAD ──
+  var receiptFile = null;
+
+  function handleReceiptUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      document.getElementById('receiptUploadStatus').textContent = 'File too large. Max 10MB.';
+      document.getElementById('receiptUploadStatus').style.color = '#FF6B6B';
+      return;
+    }
+    receiptFile = file;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('receiptPreview');
+      const img = document.getElementById('receiptPreviewImg');
+      const area = document.getElementById('receiptUploadArea');
+      img.src = e.target.result;
+      preview.style.display = 'block';
+      area.style.display = 'none';
+      document.getElementById('receiptUploadStatus').textContent = '✓ Receipt ready to submit';
+      document.getElementById('receiptUploadStatus').style.color = '#A7D3BF';
+      // Enable the confirm button
+      const btn = document.getElementById('paymentConfirmBtn');
+      if (btn) { btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer'; }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearReceiptUpload() {
+    receiptFile = null;
+    document.getElementById('receiptPreview').style.display = 'none';
+    document.getElementById('receiptUploadArea').style.display = 'block';
+    document.getElementById('receiptUploadStatus').textContent = '';
+    document.getElementById('receiptFileInput').value = '';
+    const btn = document.getElementById('paymentConfirmBtn');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; }
   }
 
   // ── UPGRADE TO PHYSICAL ID ──
@@ -2540,27 +2566,52 @@ function init(){
       var errEl=document.getElementById('gcashConfirmError');
       if(errEl) errEl.style.display='none';
       payBtn.disabled=true;
-      payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
+      payBtn.innerHTML='<span class="msb-spinner"></span>Uploading receipt\u2026';
       animate(payBtn,{scale:0.97,opacity:0.85},{duration:0.15});
       setTimeout(async function(){
-        // If this is an upgrade, update id_type and payment_status in Supabase
-        if(window._isUpgrade && window._memberId){
+        // — Upload receipt to Supabase Storage —
+        var receiptUrl = null;
+        if(receiptFile && window._memberId){
           try{
-            const{data,error}=await supabaseClient
-              .from('members')
-              .update({id_type:'physical',payment_status:'unpaid'})
-              .eq('member_id',window._memberId)
-              .select();
-            if(error||!data?.length) throw new Error(error?.message||'Update failed');
+            var ext = receiptFile.name.split('.').pop() || 'jpg';
+            var receiptFileName = 'receipt-' + window._memberId + '-' + Date.now() + '.' + ext;
+            var{error:uploadErr} = await supabaseClient.storage
+              .from('member-photos')
+              .upload(receiptFileName, receiptFile, {contentType: receiptFile.type, upsert: false});
+            if(uploadErr) throw new Error(uploadErr.message);
+            var{data:urlData} = supabaseClient.storage.from('member-photos').getPublicUrl(receiptFileName);
+            receiptUrl = urlData.publicUrl;
           }catch(e){
-            // Re-enable button and show error — do NOT proceed to printing screen
             payBtn.disabled=false;
             payBtn.innerHTML=origPayHTML;
+            payBtn.style.opacity='1'; payBtn.style.cursor='pointer';
             animate(payBtn,{scale:1,opacity:1},{duration:0.2});
-            if(errEl){errEl.textContent='Something went wrong updating your record. Please try again.';errEl.style.display='block';}
+            if(errEl){errEl.textContent='Receipt upload failed. Please try again.';errEl.style.display='block';}
             return;
           }
         }
+
+        // — Update Supabase record —
+        payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
+        try{
+          var updateFields = {payment_status:'unpaid'};
+          if(receiptUrl) updateFields.gcash_receipt_url = receiptUrl;
+          if(window._isUpgrade) { updateFields.id_type='physical'; }
+          const{data,error}=await supabaseClient
+            .from('members')
+            .update(updateFields)
+            .eq('member_id',window._memberId)
+            .select();
+          if(error||!data?.length) throw new Error(error?.message||'Update failed');
+        }catch(e){
+          payBtn.disabled=false;
+          payBtn.innerHTML=origPayHTML;
+          payBtn.style.opacity='1'; payBtn.style.cursor='pointer';
+          animate(payBtn,{scale:1,opacity:1},{duration:0.2});
+          if(errEl){errEl.textContent='Something went wrong updating your record. Please try again.';errEl.style.display='block';}
+          return;
+        }
+
         payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
         animate(payBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
         setTimeout(function(){
