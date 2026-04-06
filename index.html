@@ -972,6 +972,38 @@
   .char-counter .char-num {
     display:inline-block; will-change:transform;
   }
+  /* ── ENROLLMENT CLOSED ───────────────────────────────────────────────── */
+  #enrollmentClosed {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 48px 24px;
+    text-align: center;
+    gap: 20px;
+  }
+  #enrollmentClosed .ec-icon {
+    font-size: 56px;
+    color: var(--sage);
+    opacity: 0.7;
+    margin-bottom: 8px;
+  }
+  #enrollmentClosed h2 {
+    font-family: 'Road Rage', sans-serif;
+    font-size: clamp(28px, 7vw, 48px);
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  #enrollmentClosed p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 13px;
+    color: rgba(167,211,191,0.7);
+    max-width: 320px;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+  }
   </style>
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
   <script src="https://cdn.jsdelivr.net/npm/motion@latest/dist/motion.min.js"></script>
@@ -979,6 +1011,13 @@
   <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 </head>
 <body>
+
+<!-- Enrollment closed screen -->
+<div id="enrollmentClosed">
+  <i class="ph-fill ph-lock-simple ec-icon"></i>
+  <h2>Enrollment is currently closed</h2>
+  <p>Check back later or follow us on social media for updates.</p>
+</div>
 
 <div class="progress-bar" id="progressBar"></div>
 
@@ -1678,6 +1717,27 @@
   const supabaseUrl = 'https://pgdizsvkxnwkecxyspxp.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnZGl6c3ZreG53a2VjeHlzcHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4Mjk4NTgsImV4cCI6MjA4OTQwNTg1OH0.9HW_PKvERhzG0EhCt4Q0ARcoxwEAVmyHdPYQEiLUzxI';
   const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // ── ENROLLMENT GATE ──────────────────────────────────────────────────────
+  (async function checkEnrollment() {
+    try {
+      const { data } = await supabaseClient
+        .from('settings')
+        .select('value')
+        .eq('key', 'enrollment_open')
+        .single();
+      if (data?.value === 'false') {
+        document.getElementById('enrollmentClosed').style.display = 'flex';
+        // Hide everything else
+        document.querySelectorAll('body > *:not(#enrollmentClosed)').forEach(function(el) {
+          el.style.display = 'none';
+        });
+      }
+    } catch(e) {
+      // If settings table missing or query fails, allow form to load normally
+      console.warn('Enrollment check failed:', e);
+    }
+  })();
 
   // Copy GCash number
   function copyGcashNumber() {
