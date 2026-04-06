@@ -1721,20 +1721,21 @@
   // ── ENROLLMENT GATE ──────────────────────────────────────────────────────
   (async function checkEnrollment() {
     try {
-      const { data } = await supabaseClient
+      const { data, error } = await supabaseClient
         .from('settings')
         .select('value')
         .eq('key', 'enrollment_open')
         .single();
-      if (data?.value === 'false') {
+      console.log('[enrollment] data:', data, 'error:', error);
+      var val = data?.value;
+      var isClosed = (val === 'false' || val === false || val === '0' || val === 0);
+      if (isClosed) {
         document.getElementById('enrollmentClosed').style.display = 'flex';
-        // Hide everything else
         document.querySelectorAll('body > *:not(#enrollmentClosed)').forEach(function(el) {
           el.style.display = 'none';
         });
       }
     } catch(e) {
-      // If settings table missing or query fails, allow form to load normally
       console.warn('Enrollment check failed:', e);
     }
   })();
