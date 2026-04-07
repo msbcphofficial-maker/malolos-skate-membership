@@ -2245,9 +2245,10 @@
         if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit & Join the Crew'; }
       }
 
-      // — Photo upload to Supabase Storage —
-      let photoURL = null;
-      try {
+      // — Phase 1: Photo upload + email duplicate check in parallel —
+      const emailVal = fd.get('email') || '';
+
+      const uploadPhoto = async () => {
         const blob = await (await fetch(croppedDataURL)).blob();
         if (blob.size > 10 * 1024 * 1024) throw new Error('Photo must be under 10MB. Please use a smaller image.');
         const fileName = 'profile-' + Date.now() + '.jpg';
@@ -2258,40 +2259,45 @@
         const { data: publicUrlData } = supabaseClient.storage
           .from('member-photos')
           .getPublicUrl(fileName);
-        photoURL = publicUrlData.publicUrl;
-        if (!photoURL) throw new Error('No file URL returned from upload');
+        const url = publicUrlData.publicUrl;
+        if (!url) throw new Error('No file URL returned from upload');
+        return url;
+      };
+
+      const checkDuplicate = async () => {
+        try {
+          const { data: existing } = await supabaseClient
+            .from('members')
+            .select('member_id')
+            .eq('email', emailVal.trim())
+            .limit(1);
+          return existing && existing.length > 0;
+        } catch (e) {
+          console.warn('Duplicate email check failed:', e);
+          return false;
+        }
+      };
+
+      let photoURL, isDuplicate;
+      try {
+        [photoURL, isDuplicate] = await Promise.all([uploadPhoto(), checkDuplicate()]);
       } catch (e) {
         showSubmitError('Photo upload failed. Please re-upload your photo and try again.');
         document.getElementById('photoErrorMsg').classList.add('visible');
         return;
       }
-
-      // — Check for duplicate email —
-      try {
-        const emailVal = fd.get('email') || '';
-        const { data: existing } = await supabaseClient
-          .from('members')
-          .select('member_id')
-          .eq('email', emailVal.trim())
-          .limit(1);
-        if (existing && existing.length > 0) {
-          showSubmitError('This email is already registered. Each member can only sign up once.');
-          return;
-        }
-      } catch (e) {
-        // Non-blocking — if check fails, allow submission to proceed
-        console.warn('Duplicate email check failed:', e);
+      if (isDuplicate) {
+        showSubmitError('This email is already registered. Each member can only sign up once.');
+        return;
       }
 
-      // — Supabase submission —
-      // Generate member ID atomically via Postgres sequence (race-condition safe)
+      // — Phase 2: Generate member ID + insert —
       let memberId;
       try {
         const { data: idData, error: idError } = await supabaseClient.rpc('get_next_member_id');
         if (idError || !idData) throw new Error('ID generation failed');
         memberId = idData;
       } catch (e) {
-        // Fall back to a random number if the RPC fails
         memberId = '2026-' + String(Math.floor(Math.random() * 9000) + 1000);
       }
       window._memberId = memberId; // stored for upgrade flow
@@ -2327,22 +2333,17 @@
         return;
       }
 
-      // — Brevo: create contact via secure serverless function —
-      try {
-        await fetch('/api/add-to-brevo', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            email: fd.get('email'),
-            firstName: fd.get('firstName') || '',
-            lastName: fd.get('lastName') || '',
-            memberId: memberId
-          })
-        });
-      } catch (err) {
-        // Non-blocking — Brevo failure should not stop the success screen
-        console.warn('Brevo contact creation failed:', err);
-      }
+      // — Phase 3: Brevo — fire and forget, never block the success screen —
+      fetch('/api/add-to-brevo', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email: fd.get('email'),
+          firstName: fd.get('firstName') || '',
+          lastName: fd.get('lastName') || '',
+          memberId: memberId
+        })
+      }).catch(err => console.warn('Brevo contact creation failed:', err));
 
       // — Store member info for later notify (sent after receipt upload) —
       window._memberNotifyData = {
