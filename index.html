@@ -205,7 +205,7 @@
 
   .field-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 16px;
   }
 
@@ -338,7 +338,7 @@
   /* ID CHOICE CARDS */
   .id-cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 16px;
     margin-top: 8px;
   }
@@ -348,6 +348,7 @@
   }
 
   .id-card-radio { display: none; }
+  #physicalIdBlock::before { display: none; }
 
   .id-card {
     border: 2px solid var(--grime);
