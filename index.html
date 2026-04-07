@@ -348,7 +348,6 @@
   }
 
   .id-card-radio { display: none; }
-  #physicalIdBlock::before { display: none; }
 
   .id-card {
     border: 2px solid var(--grime);
@@ -370,7 +369,23 @@
     box-shadow: inset 0 0 0 4px var(--sage);
   }
 
+  .id-card.selected {
+    border-color: var(--sage); background: var(--sage);
+  }
 
+  .id-card.selected::before {
+    border-color: var(--navy-deep);
+    background: var(--navy-deep);
+    box-shadow: inset 0 0 0 4px var(--sage);
+  }
+
+  .id-card.selected .id-price-badge {
+    background: var(--navy-deep); color: #ffffff;
+  }
+
+  .id-card.selected .id-card-type,
+  .id-card.selected .id-card-price,
+  .id-card.selected .id-card-desc { color: var(--navy-deep); }
 
 
 
@@ -582,6 +597,18 @@
   .submit-btn:hover::before { left: 100%; }
 
   .submit-btn:active { transform: translateY(0); }
+
+  .submit-btn:disabled,
+  .submit-btn[disabled] {
+    background: var(--grime);
+    color: rgba(167,211,191,0.35);
+    cursor: not-allowed;
+    transform: none;
+    opacity: 1;
+  }
+
+  .submit-btn:disabled::before,
+  .submit-btn[disabled]::before { display: none; }
 
   .submit-note {
     font-family: 'Roboto Mono', monospace;
@@ -1350,7 +1377,7 @@
     <!-- SUBMIT -->
     <div class="submit-wrap">
       <div id="submitError" class="error-msg" role="status" aria-live="polite" aria-atomic="true" style="text-align:center; margin-bottom:10px; display:none;"></div>
-      <button type="submit" class="submit-btn">Join the Crew</button>
+      <button type="submit" class="submit-btn" id="submitJoinBtn" disabled>Join the Crew</button>
 
     </div>
 
@@ -1968,9 +1995,34 @@
   }
 
   function togglePhysicalDetails() {
+    const card = document.getElementById('physicalIdBlock');
     const section = document.getElementById('deliverySection');
-    section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    const isSelected = card.classList.contains('selected');
+    if (isSelected) {
+      card.classList.remove('selected');
+      section.style.display = 'none';
+    } else {
+      card.classList.add('selected');
+      section.style.display = 'block';
+    }
+    updateSubmitState();
   }
+
+  function updateSubmitState() {
+    const card = document.getElementById('physicalIdBlock');
+    const ack = document.getElementById('deliveryAck');
+    const btn = document.getElementById('submitJoinBtn');
+    if (!btn) return;
+    const cardSelected = card && card.classList.contains('selected');
+    const ackChecked = ack && ack.checked;
+    btn.disabled = !(cardSelected && ackChecked);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const ack = document.getElementById('deliveryAck');
+    if (ack) ack.addEventListener('change', updateSubmitState);
+    updateSubmitState();
+  });
 
   // Toggle address fields
 
