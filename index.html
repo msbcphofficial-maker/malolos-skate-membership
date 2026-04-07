@@ -1178,10 +1178,10 @@
     <!-- Profile Photo Upload -->
     <div id="photoGroup" class="field-group" style="display:flex; flex-direction:column; align-items:center; margin-bottom:32px;">
       <label style="margin-bottom:12px;">Profile Photo <span style="color:var(--sage); font-size:0.8em;">(Used for your ID)</span> <span class="required">*</span></label>
-      <div id="photoPreviewWrap" role="button" tabindex="0" aria-label="Upload profile photo" style="width:120px; height:120px; border-radius:0; border:3px dashed var(--sage); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer; background:var(--navy-mid); position:relative;" onclick="document.getElementById('profilePhoto').click()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();document.getElementById('profilePhoto').click();}">
+      <label for="profilePhoto" id="photoPreviewWrap" tabindex="0" aria-label="Upload profile photo" style="width:120px; height:120px; border-radius:0; border:3px dashed var(--sage); display:flex; align-items:center; justify-content:center; overflow:hidden; cursor:pointer; background:var(--navy-mid); position:relative;">
         <img id="photoPreview" src="" alt="Your profile photo preview" style="width:100%; height:100%; object-fit:cover; display:none; border-radius:0;">
         <span id="photoPlaceholder" style="font-family:'Roboto Mono', monospace; color:var(--sage); font-size:0.9em; font-weight:700; text-align:center; padding:10px; line-height:1.5; letter-spacing:0.06em; text-transform:uppercase;">TAP TO<br>UPLOAD<br>PHOTO</span>
-      </div>
+      </label>
       <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" style="display:none;" onchange="previewPhoto(this)">
       <div class="field-hint" style="margin-top:10px; text-align:center;">// JPG or PNG · Will appear on your ID</div>
       <div id="photoErrorMsg" class="error-msg" style="text-align:center;">Please upload a profile photo.</div></div>
@@ -2670,16 +2670,21 @@
     if (input) input.value = '';
   }
 
-  // Bind change event directly — bypasses onchange attribute in case it's ignored
+  // Bind change + input events directly — reliable cross-browser fallback
   (function bindPhotoInput() {
+    function attach(el) {
+      var fired = false;
+      function handler() { if (fired) return; fired = true; setTimeout(function(){ fired = false; }, 500); previewPhoto(el); }
+      el.addEventListener('change', handler);
+      el.addEventListener('input', handler);
+    }
     var photoInput = document.getElementById('profilePhoto');
     if (photoInput) {
-      photoInput.addEventListener('change', function() { previewPhoto(this); });
+      attach(photoInput);
     } else {
-      // Input not yet in DOM — wait for it
       document.addEventListener('DOMContentLoaded', function() {
         var el = document.getElementById('profilePhoto');
-        if (el) el.addEventListener('change', function() { previewPhoto(this); });
+        if (el) attach(el);
       });
     }
   })();
