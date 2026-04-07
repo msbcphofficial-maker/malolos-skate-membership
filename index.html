@@ -1341,12 +1341,7 @@
         <div class="phys-preview-heading">// Card Preview</div>
         <div class="phys-card-stack">
           <div>
-            <div class="phys-side-label">// Front</div>
-            <img class="phys-card-img" src="Malolos Skateboarding ID_Front.jpg" alt="Physical ID - Front">
-          </div>
-          <div>
-            <div class="phys-side-label">// Back</div>
-            <img class="phys-card-img" src="Malolos Skateboarding ID_Back.jpg" alt="Physical ID - Back">
+            <img class="phys-card-img" id="cardPreviewImg" src="ID Preview_Malolos Skateboarding.jpg" alt="ID Card Preview" style="display:none;">
           </div>
         </div>
       </div>
@@ -1961,6 +1956,15 @@
       pillsContainer.appendChild(lbl);
     });
     group.style.display = 'block';
+    // Update card preview image based on discipline
+    const previewImg = document.getElementById('cardPreviewImg');
+    if (previewImg) {
+      const skateDisc = ['Skateboarding', 'Fingerboarding'];
+      previewImg.src = skateDisc.includes(selected.value)
+        ? 'ID Preview_Malolos Skateboarding.jpg'
+        : 'ID Preview_MSBC.jpg';
+      previewImg.style.display = 'block';
+    }
   }
 
   function togglePhysicalDetails() {
