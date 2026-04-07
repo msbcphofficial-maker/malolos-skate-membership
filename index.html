@@ -2356,7 +2356,7 @@
       };
 
       // — Success: show success screen —
-      populateDigitalID(memberId);
+      try { populateDigitalID(memberId); } catch(e) { console.warn('populateDigitalID error:', e); }
       document.getElementById('successScreen').classList.add('visible');
       window.scrollTo({ top: 0 });
       requestAnimationFrame(scaleIdPreview);
