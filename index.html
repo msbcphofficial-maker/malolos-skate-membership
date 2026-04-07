@@ -2002,46 +2002,69 @@
   let croppedDataURL = null;
 
   function previewPhoto(input) {
-    const file = input.files[0];
-    if (!file) return;
-    // MIME type validation — block non-image files
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Please upload a valid image file (JPG, PNG, or WEBP).');
-      input.value = '';
-      return;
+    try {
+      const file = input.files[0];
+      if (!file) return;
+      // MIME type check — allow by extension too, since some browsers return empty type
+      const name = file.name.toLowerCase();
+      const validExt = name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.png') || name.endsWith('.webp');
+      const validMime = !file.type || file.type.startsWith('image/');
+      if (!validExt && !validMime) {
+        alert('Please upload a valid image file (JPG, PNG, or WEBP).');
+        input.value = '';
+        return;
+      }
+      // File size check upfront (10MB max)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Photo must be under 10MB. Please use a smaller image.');
+        input.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onerror = function() {
+        alert('Could not read the image file. Please try a different photo.');
+      };
+      reader.onload = function(e) {
+        try {
+          const cropImg = document.getElementById('cropImage');
+          const cropModal = document.getElementById('cropModal');
+          if (!cropImg || !cropModal) {
+            alert('Crop tool failed to load. Please refresh the page and try again.');
+            return;
+          }
+          cropImg.src = e.target.result;
+          cropModal.style.display = 'flex';
+          if (cropper) { try { cropper.destroy(); } catch(e2) {} }
+          setTimeout(() => {
+            try {
+              cropper = new Cropper(document.getElementById('cropImage'), {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.9,
+                movable: true,
+                zoomable: true,
+                rotatable: false,
+                scalable: false,
+                background: false,
+                modal: true,
+                guides: false,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+              });
+            } catch(cropErr) {
+              alert('Crop tool error: ' + cropErr.message + '. Try refreshing the page.');
+            }
+          }, 100);
+        } catch(innerErr) {
+          alert('Photo preview error: ' + innerErr.message);
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch(outerErr) {
+      alert('Upload error: ' + outerErr.message);
     }
-    // File size check upfront (10MB max)
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Photo must be under 10MB. Please use a smaller image.');
-      input.value = '';
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      document.getElementById('cropImage').src = e.target.result;
-      document.getElementById('cropModal').style.display = 'flex';
-      if (cropper) cropper.destroy();
-      setTimeout(() => {
-        cropper = new Cropper(document.getElementById('cropImage'), {
-          aspectRatio: 1,
-          viewMode: 1,
-          dragMode: 'move',
-          autoCropArea: 0.9,
-          movable: true,
-          zoomable: true,
-          rotatable: false,
-          scalable: false,
-          background: false,
-          modal: true,
-          guides: false,
-          highlight: false,
-          cropBoxMovable: true,
-          cropBoxResizable: true,
-        });
-      }, 100);
-    };
-    reader.readAsDataURL(file);
   }
 
   function applyCrop() {
