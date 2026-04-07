@@ -2024,10 +2024,14 @@
       window.scrollTo({ top: 0 });
       requestAnimationFrame(scaleIdPreview);
 
-      // Physical ID always required — hide digital ID card, show GCash payment
+      // Physical ID always required — hide header, digital ID card, download button; show GCash payment
       const gcashSection = document.getElementById('gcashPaymentSection');
       const idCardWrapper = document.getElementById('idCaptureWrapper');
+      const successHeader = document.querySelector('.success-header');
+      const idFooter = document.querySelector('.id-footer');
       if (idCardWrapper) idCardWrapper.style.display = 'none';
+      if (successHeader) successHeader.style.display = 'none';
+      if (idFooter) idFooter.style.display = 'none';
       if (gcashSection) {
         gcashSection.style.display = 'block';
         setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
