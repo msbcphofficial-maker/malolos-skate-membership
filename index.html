@@ -1166,10 +1166,14 @@
     <div class="field-group">
       <label>Your Discipline <span class="required">*</span></label>
       <div class="pill-group" style="flex-wrap:nowrap;">
-        <input type="checkbox" name="discipline[]" id="d1" value="Skateboarding">
+        <input type="radio" name="discipline" id="d1" value="Skateboarding" required>
         <label for="d1" style="flex:1;text-align:center;">Skateboarding</label>
-        <input type="checkbox" name="discipline[]" id="d2" value="Fingerboarding">
+        <input type="radio" name="discipline" id="d2" value="Fingerboarding">
         <label for="d2" style="flex:1;text-align:center;">Fingerboarding</label>
+        <input type="radio" name="discipline" id="d3" value="BMX">
+        <label for="d3" style="flex:1;text-align:center;">BMX</label>
+        <input type="radio" name="discipline" id="d4" value="Scooter">
+        <label for="d4" style="flex:1;text-align:center;">Scooter</label>
       </div>
       <div id="disciplineError" class="error-msg">Please select your discipline.</div>
     </div>
@@ -1937,7 +1941,7 @@
 
     // Validate photo, all radios, and awards
     if (!croppedDataURL) { document.getElementById('photoErrorMsg').classList.add('visible'); valid = false; } else { document.getElementById('photoErrorMsg').classList.remove('visible'); }
-    const disciplineChecked = document.querySelectorAll('input[name="discipline[]"]:checked'); const disciplineError = document.getElementById('disciplineError'); if (!disciplineChecked.length) { valid = false; if(disciplineError) disciplineError.classList.add('visible'); } else { if(disciplineError) disciplineError.classList.remove('visible'); }
+    const disciplineChecked = document.querySelectorAll('input[name="discipline"]:checked'); const disciplineError = document.getElementById('disciplineError'); if (!disciplineChecked.length) { valid = false; if(disciplineError) disciplineError.classList.add('visible'); } else { if(disciplineError) disciplineError.classList.remove('visible'); }
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
     const idTypeSelected = document.querySelector('input[name="idType"]:checked'); const idTypeError = document.getElementById('idTypeError'); if (!idTypeSelected) { valid = false; if(idTypeError) idTypeError.classList.add('visible'); } else { if(idTypeError) idTypeError.classList.remove('visible'); }
@@ -2043,7 +2047,7 @@
         instagram_handle: fd.get('instagram') || null,
         email: fd.get('email') || null,
         mobile_number: fd.get('phone') || null,
-        discipline: [...document.querySelectorAll('input[name="discipline[]"]:checked')].map(c => c.value).join(', ') || null,
+        discipline: [...document.querySelectorAll('input[name="discipline"]:checked')].map(c => c.value).join(', ') || null,
         skate_name: fd.get('skateName') || null,
         skill_level: fd.get('skillLevel') || null,
         years_skating: fd.get('yearsSkating') || null,
