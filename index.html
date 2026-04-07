@@ -2669,6 +2669,20 @@
     if (cropper) { try { cropper.destroy(); } catch(e) {} cropper = null; }
     if (input) input.value = '';
   }
+
+  // Bind change event directly — bypasses onchange attribute in case it's ignored
+  (function bindPhotoInput() {
+    var photoInput = document.getElementById('profilePhoto');
+    if (photoInput) {
+      photoInput.addEventListener('change', function() { previewPhoto(this); });
+    } else {
+      // Input not yet in DOM — wait for it
+      document.addEventListener('DOMContentLoaded', function() {
+        var el = document.getElementById('profilePhoto');
+        if (el) el.addEventListener('change', function() { previewPhoto(this); });
+      });
+    }
+  })();
 </script>
 
 <!-- CROP MODAL -->
