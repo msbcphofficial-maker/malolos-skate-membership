@@ -2582,8 +2582,10 @@
   var croppedDataURL = null;
 
   function previewPhoto(input) {
+    console.log('[photo] previewPhoto called, files:', input ? input.files.length : 'null input');
     try {
       var file = input.files[0];
+      console.log('[photo] file:', file ? file.name + ' / ' + file.type + ' / ' + file.size : 'none');
       if (!file) return;
       var name = file.name.toLowerCase();
       var validExt = name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.png') || name.endsWith('.webp');
@@ -2672,9 +2674,14 @@
 
   // Bind change + input events directly — reliable cross-browser fallback
   (function bindPhotoInput() {
+    console.log('[photo] bindPhotoInput running');
     function attach(el) {
+      console.log('[photo] attaching events to', el.id);
       var fired = false;
-      function handler() { if (fired) return; fired = true; setTimeout(function(){ fired = false; }, 500); previewPhoto(el); }
+      function handler() {
+        console.log('[photo] change/input event fired, files:', el.files.length);
+        if (fired) return; fired = true; setTimeout(function(){ fired = false; }, 500); previewPhoto(el);
+      }
       el.addEventListener('change', handler);
       el.addEventListener('input', handler);
     }
@@ -2682,9 +2689,11 @@
     if (photoInput) {
       attach(photoInput);
     } else {
+      console.log('[photo] profilePhoto not found yet, waiting for DOMContentLoaded');
       document.addEventListener('DOMContentLoaded', function() {
         var el = document.getElementById('profilePhoto');
         if (el) attach(el);
+        else console.error('[photo] profilePhoto still not found after DOMContentLoaded!');
       });
     }
   })();
