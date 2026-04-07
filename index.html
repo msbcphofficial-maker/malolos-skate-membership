@@ -1210,24 +1210,9 @@
       <div class="error-msg" id="yearsSkatingError">Please select your years riding.</div>
     </div>
 
-    <div class="field-group">
+    <div class="field-group" id="styleGroup" style="display:none;">
       <label>Riding Style <span class="required">*</span></label>
-      <div class="pill-group">
-        <input type="radio" name="style" id="s1" value="Street" required>
-        <label for="s1">Street</label>
-        <input type="radio" name="style" id="s2" value="Park">
-        <label for="s2">Park</label>
-        <input type="radio" name="style" id="s3" value="Vert">
-        <label for="s3">Vert</label>
-        <input type="radio" name="style" id="s4" value="Freestyle">
-        <label for="s4">Freestyle</label>
-        <input type="radio" name="style" id="s5" value="Cruising">
-        <label for="s5">Cruising</label>
-        <input type="radio" name="style" id="s6" value="Tech">
-        <label for="s6">Tech</label>
-        <input type="radio" name="style" id="s7" value="Realistic">
-        <label for="s7">Realistic</label>
-      </div>
+      <div class="pill-group" id="styleOptions"></div>
       <div class="field-hint" style="margin-top:6px;">// Choose your primary style</div>
       <div id="styleError" class="error-msg">Please choose your riding style.</div></div>
     <div class="field-group">
@@ -2718,6 +2703,51 @@ document.addEventListener('DOMContentLoaded', function () {
     el.setAttribute('role','heading');
     el.setAttribute('aria-level','2');
   });
+})();
+</script>
+<script>
+(function () {
+  var disciplineStyles = {
+    'Skateboarding':  ['Street','Park','Vert','Transition','Cruising','Freestyle','Tech'],
+    'Fingerboarding': ['Street','Tech','Park','Flatground','Realistic','Ledge & Rail'],
+    'BMX':            ['Street','Park','Vert','Trail','Flatland','Race'],
+    'Scooter':        ['Street','Park','Vert','Flatground']
+  };
+
+  function updateStyles(discipline) {
+    var group  = document.getElementById('styleGroup');
+    var container = document.getElementById('styleOptions');
+    container.innerHTML = '';
+    if (!discipline || !disciplineStyles[discipline]) {
+      group.style.display = 'none';
+      return;
+    }
+    var styles = disciplineStyles[discipline];
+    styles.forEach(function (style, i) {
+      var id = 'sdyn' + i;
+      var input = document.createElement('input');
+      input.type = 'radio';
+      input.name = 'style';
+      input.id = id;
+      input.value = style;
+      var lbl = document.createElement('label');
+      lbl.setAttribute('for', id);
+      lbl.textContent = style;
+      container.appendChild(input);
+      container.appendChild(lbl);
+    });
+    group.style.display = '';
+  }
+
+  document.querySelectorAll('input[name="discipline"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      updateStyles(this.value);
+    });
+  });
+
+  // Init on load in case a value is pre-selected
+  var checked = document.querySelector('input[name="discipline"]:checked');
+  updateStyles(checked ? checked.value : null);
 })();
 </script>
 </body>
