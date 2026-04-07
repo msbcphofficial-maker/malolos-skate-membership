@@ -1202,23 +1202,27 @@
     <!-- SECTION 2: SKATER DETAILS -->
     <div class="section-label">
       <span class="section-num">02</span>
-      <span class="section-title">Skater Details</span>
+      <span class="section-title">Rider Details</span>
       <div class="section-line"></div>
     </div>
 
     <div class="field-group">
-      <label>Your Discipline <span class="required">*</span></label>
-      <div class="pill-group" style="flex-wrap:nowrap;">
-        <input type="checkbox" name="discipline[]" id="d1" value="Skateboarding">
-        <label for="d1" style="flex:1;text-align:center;">Skateboarding</label>
-        <input type="checkbox" name="discipline[]" id="d2" value="Fingerboarding">
-        <label for="d2" style="flex:1;text-align:center;">Fingerboarding</label>
+      <label>Discipline <span class="required">*</span></label>
+      <div class="pill-group" id="disciplinePills">
+        <input type="radio" name="discipline" id="d1" value="Skateboarding" required onchange="updateRidingStyles()">
+        <label for="d1">Skateboarding</label>
+        <input type="radio" name="discipline" id="d2" value="Fingerboarding" onchange="updateRidingStyles()">
+        <label for="d2">Fingerboarding</label>
+        <input type="radio" name="discipline" id="d3" value="BMX" onchange="updateRidingStyles()">
+        <label for="d3">BMX</label>
+        <input type="radio" name="discipline" id="d4" value="Scooter" onchange="updateRidingStyles()">
+        <label for="d4">Scooter</label>
       </div>
       <div id="disciplineError" class="error-msg">Please select your discipline.</div>
     </div>
 
     <div class="field-group">
-      <label>Skate Name <span class="required">*</span></label>
+      <label>Rider Name / Alias <span class="required">*</span></label>
       <div class="char-wrap"><input type="text" name="skateName" placeholder="Your nickname or alias" maxlength="10" required><span class="char-counter" data-max="10"><span class="char-num">10</span></span></div>
       <div class="error-msg">Required field.</div></div>
 
@@ -1237,8 +1241,8 @@
       <div id="skillError" class="error-msg">Please select your skill level.</div></div>
 
     <div class="field-group">
-      <label for="yearsSkating">Years Skating <span class="required">*</span></label>
-      <select id="yearsSkating" name="yearsSkating" required>
+      <label for="yearsSkating">Years Riding <span class="required">*</span></label>
+      <select id="yearsSkating" name="yearsRiding" required>
         <option value="" disabled selected>Select range</option>
         <option>&lt; 1 year</option>
         <option>1 – 2 years</option>
@@ -1246,32 +1250,17 @@
         <option>6 – 10 years</option>
         <option>10+ years</option>
       </select>
-      <div class="error-msg" id="yearsSkatingError">Please select your years skating.</div>
+      <div class="error-msg" id="yearsRidingError">Please select your years riding.</div>
     </div>
 
-    <div class="field-group">
-      <label>Skate Style <span class="required">*</span></label>
-      <div class="pill-group">
-        <input type="radio" name="style" id="s1" value="Street" required>
-        <label for="s1">Street</label>
-        <input type="radio" name="style" id="s2" value="Park">
-        <label for="s2">Park</label>
-        <input type="radio" name="style" id="s3" value="Vert">
-        <label for="s3">Vert</label>
-        <input type="radio" name="style" id="s4" value="Freestyle">
-        <label for="s4">Freestyle</label>
-        <input type="radio" name="style" id="s5" value="Cruising">
-        <label for="s5">Cruising</label>
-        <input type="radio" name="style" id="s6" value="Tech">
-        <label for="s6">Tech</label>
-        <input type="radio" name="style" id="s7" value="Realistic">
-        <label for="s7">Realistic</label>
-      </div>
-      <div class="field-hint" style="margin-top:6px;">// Choose your primary style</div>
-      <div id="styleError" class="error-msg">Please choose your skate style.</div></div>
+    <div class="field-group" id="ridingStyleGroup" style="display:none;">
+  <label>Riding Style <span class="required">*</span></label>
+  <div class="pill-group" id="ridingStylePills"></div>
+  <div class="field-hint" style="margin-top:6px;">// Choose your primary riding style</div>
+  <div id="styleError" class="error-msg">Please choose your riding style.</div></div>
     <div class="field-group">
       <label>Home Spot <span class="required">*</span></label>
-      <div class="char-wrap"><input type="text" name="homeSpot" placeholder="Where do you usually ride or session?" maxlength="25" required><span class="char-counter" data-max="25"><span class="char-num">25</span></span></div>
+      <div class="char-wrap"><input type="text" name="homeSpot" placeholder="Where do you usually ride?" maxlength="25" required><span class="char-counter" data-max="25"><span class="char-num">25</span></span></div>
       <div class="error-msg">Required field.</div></div>
 
     <div class="field-group">
@@ -1293,71 +1282,57 @@
 
 
 
-    <!-- SECTION 3: ID CHOICE -->
+    <!-- SECTION 3: ID -->
     <div class="section-label">
       <span class="section-num">03</span>
       <span class="section-title">Get Your ID</span>
       <div class="section-line"></div>
     </div>
 
+    <!-- PHYSICAL ID — required for all members -->
     <div class="field-group">
-      <label>Choose Your ID Type <span class="required">*</span></label>
+      <label>Member ID <span class="required">*</span></label>
       <div class="id-cards">
-        <div>
-          <input type="radio" name="idType" id="idDigital" value="digital" class="id-card-radio" required onchange="toggleDelivery()">
-          <label for="idDigital" class="id-card">
-            <div class="id-price-badge">FREE</div>
-            <div class="id-card-type">Digital ID</div>
-            <div class="id-card-price">JPG Download</div>
-            <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
-                <li>&#x2022; Downloadable instantly after sign-up.</li>
-                <li>&#x2022; Mobile-ready format.</li>
-                <li>&#x2022; Your official Malolos Skateboarding member card.</li>
-              </ul></div>
-          </label>
-        </div>
-        <div>
-          <input type="radio" name="idType" id="idPhysical" value="physical" class="id-card-radio" onchange="toggleDelivery()">
-          <label for="idPhysical" class="id-card">
+        <div style="width:100%;">
+          <div class="id-card" id="physicalIdBlock" style="cursor:pointer;width:100%;" onclick="togglePhysicalDetails()">
             <div class="id-price-badge">₱250</div>
             <div class="id-card-type">Physical ID</div>
-            <div class="id-card-price">PAID · Ready in 1 Week</div>
+            <div class="id-card-price">REQUIRED · Ready in 7–14 Days</div>
             <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
                 <li>&#x2022; Premium printed card.</li>
-                <li>&#x2022; Exclusive physical design.</li>
-                <li>&#x2022; Pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.</li>
-              </ul>
-              <em style="display:block;margin-top:8px;">Optional &mdash; you can still join for free with just the Digital ID.</em></div>
-          </label>
+                <li>&#x2022; Required for all MSBC members.</li>
+                <li>&#x2022; Tap to see pickup details.</li>
+              </ul></div>
+          </div>
         </div>
       </div>
-      <div id="idTypeError" class="error-msg">Please select your ID type.</div></div>
+    </div>
 
-    <!-- PHYSICAL ID DELIVERY OPTIONS -->
-    <div class="delivery-section" id="deliverySection">
+    <!-- PHYSICAL ID DETAILS (expandable) -->
+    <div class="delivery-section" id="deliverySection" style="display:none;">
       <div class="pickup-info-row">
         <span class="pickup-info-label">Pickup</span>
-        <span class="pickup-info-value" id="pickupLocation" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
+        <span class="pickup-info-value" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
           Explore Co. 100 A. Mabini, Malolos, Bulacan
           <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" title="Get directions" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size: 14px;white-space:nowrap;opacity:0.85;">
-            <i class="ph ph-map-pin" style="font-size:14px;vertical-align:middle;"></i>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             Directions
           </a>
         </span>
       </div>
       <div class="pickup-info-row">
         <span class="pickup-info-label">Ready in</span>
-        <span class="pickup-info-value">7 Days</span>
+        <span class="pickup-info-value">7–14 Days</span>
       </div>
       <div class="pickup-info-row">
         <span class="pickup-info-label">Payment</span>
-        <span class="pickup-info-value">GCash</span>
+        <span class="pickup-info-value">GCash · ₱250</span>
       </div>
       <div class="field-hint" style="margin-top: 12px;">// We'll reach out with payment and pickup details after you submit.</div>
-      <div class="field-hint" style="margin-top: 8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
+      <div class="field-hint" style="margin-top: 8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community sessions, and keeping MSBC running.</div>
       <div style="margin-top:14px; display:flex; align-items:flex-start; gap:8px;">
         <input type="checkbox" id="deliveryAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;">
-        <label for="deliveryAck" style="font-family:'Roboto Mono', monospace; font-size: 11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that Physical ID requires ₱250 GCash payment and pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.</label>
+        <label for="deliveryAck" style="font-family:'Roboto Mono', monospace; font-size: 11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that my Physical ID requires ₱250 GCash payment and pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan. Ready in 7–14 days.</label>
       </div>
       <div class="error-msg" id="deliveryAckError">Please check the box above before submitting.</div>
 
@@ -1365,7 +1340,14 @@
       <div class="phys-preview-wrap">
         <div class="phys-preview-heading">// Card Preview</div>
         <div class="phys-card-stack">
-          <img class="phys-card-img" src="ID%20Mockup.jpg" alt="Physical ID Mockup" style="width:100%;border-radius:0;display:block;margin:0 auto;">
+          <div>
+            <div class="phys-side-label">// Front</div>
+            <img class="phys-card-img" src="Malolos Skateboarding ID_Front.jpg" alt="Physical ID - Front">
+          </div>
+          <div>
+            <div class="phys-side-label">// Back</div>
+            <img class="phys-card-img" src="Malolos Skateboarding ID_Back.jpg" alt="Physical ID - Back">
+          </div>
         </div>
       </div>
     </div>
@@ -1421,7 +1403,7 @@
       <hr class="id-divider">
       <div class="id-fields">
         <div class="id-field-row">
-          <span class="id-field-label">Skate Name</span>
+          <span class="id-field-label">Rider Name</span>
           <span class="id-field-value" id="idSkateName">—</span>
         </div>
         <div class="id-field-row">
@@ -1429,11 +1411,11 @@
           <span class="id-field-value" id="idSkillLevel">—</span>
         </div>
         <div class="id-field-row">
-          <span class="id-field-label">Years Skating</span>
+          <span class="id-field-label">Years Riding</span>
           <span class="id-field-value" id="idYears">—</span>
         </div>
         <div class="id-field-row">
-          <span class="id-field-label">Skate Style</span>
+          <span class="id-field-label">Riding Style</span>
           <span class="id-field-value" id="idStyle">—</span>
         </div>
         <div class="id-field-row">
@@ -1954,16 +1936,36 @@
     progressBar.style.width = Math.min(pct, 100) + '%';
   });
 
-  // Toggle delivery section
-  function toggleDelivery() {
-    const physical = document.getElementById('idPhysical').checked;
+  const DISCIPLINE_STYLES = {
+    'Skateboarding': ['Street', 'Park', 'Vert', 'Transition', 'Cruising', 'Freestyle', 'Tech'],
+    'Fingerboarding': ['Street', 'Tech', 'Park', 'Flatground', 'Realistic', 'Ledge & Rail'],
+    'BMX': ['Street', 'Park', 'Vert', 'Trail', 'Flatland', 'Race'],
+    'Scooter': ['Street', 'Park', 'Vert', 'Flatground']
+  };
+
+  function updateRidingStyles() {
+    const selected = document.querySelector('input[name="discipline"]:checked');
+    const group = document.getElementById('ridingStyleGroup');
+    const pillsContainer = document.getElementById('ridingStylePills');
+    if (!selected) { group.style.display = 'none'; return; }
+    const styles = DISCIPLINE_STYLES[selected.value] || [];
+    pillsContainer.innerHTML = '';
+    styles.forEach((style, i) => {
+      const id = 'rs' + i;
+      const inp = document.createElement('input');
+      inp.type = 'radio'; inp.name = 'style'; inp.id = id; inp.value = style;
+      if (i === 0) inp.required = true;
+      const lbl = document.createElement('label');
+      lbl.htmlFor = id; lbl.textContent = style;
+      pillsContainer.appendChild(inp);
+      pillsContainer.appendChild(lbl);
+    });
+    group.style.display = 'block';
+  }
+
+  function togglePhysicalDetails() {
     const section = document.getElementById('deliverySection');
-    section.classList.toggle('visible', physical);
-    // Reset acknowledgment when switching ID types
-    const ack = document.getElementById('deliveryAck');
-    const ackErr = document.getElementById('deliveryAckError');
-    if (ack) ack.checked = false;
-    if (ackErr) ackErr.classList.remove('visible');
+    section.style.display = section.style.display === 'none' ? 'block' : 'none';
   }
 
   // Toggle address fields
@@ -2002,16 +2004,14 @@
 
     // Validate photo, all radios, and awards
     if (!croppedDataURL) { document.getElementById('photoErrorMsg').classList.add('visible'); valid = false; } else { document.getElementById('photoErrorMsg').classList.remove('visible'); }
-    const disciplineChecked = document.querySelectorAll('input[name="discipline[]"]:checked'); const disciplineError = document.getElementById('disciplineError'); if (!disciplineChecked.length) { valid = false; if(disciplineError) disciplineError.classList.add('visible'); } else { if(disciplineError) disciplineError.classList.remove('visible'); }
+    const disciplineSelected = document.querySelector('input[name="discipline"]:checked');
+    if (!disciplineSelected) { valid = false; document.getElementById('disciplineError').classList.add('visible'); } else { document.getElementById('disciplineError').classList.remove('visible'); }
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
-    const idTypeSelected = document.querySelector('input[name="idType"]:checked'); const idTypeError = document.getElementById('idTypeError'); if (!idTypeSelected) { valid = false; if(idTypeError) idTypeError.classList.add('visible'); } else { if(idTypeError) idTypeError.classList.remove('visible'); }
-    if (idTypeSelected && idTypeSelected.value === 'physical') {
-      const deliveryAck = document.getElementById('deliveryAck');
+    const deliveryAck = document.getElementById('deliveryAck');
       const deliveryAckError = document.getElementById('deliveryAckError');
       if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
       else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
-    }
     // Awards are optional — empty rows are filtered on submit (no silent DOM removal)
 
 
@@ -2108,16 +2108,16 @@
         instagram_handle: fd.get('instagram') || null,
         email: fd.get('email') || null,
         mobile_number: fd.get('phone') || null,
-        discipline: [...document.querySelectorAll('input[name="discipline[]"]:checked')].map(c => c.value).join(', ') || null,
         skate_name: fd.get('skateName') || null,
         skill_level: fd.get('skillLevel') || null,
-        years_skating: fd.get('yearsSkating') || null,
+        years_skating: fd.get('yearsRiding') || null,
         skate_style: styles.length ? styles.join(', ') : null,
+        discipline: fd.get('discipline') || null,
         home_spot: fd.get('homeSpot') || null,
         go_to_trick: fd.get('bestTrick') || null,
         awards: awardVals.length ? awardVals.join(', ') : null,
-        id_type: fd.get('idType') || null,
-        payment_status: fd.get('idType') === 'physical' ? 'unpaid' : null,
+        id_type: 'physical',
+        payment_status: 'unpaid',
         photo_url: photoURL,
         member_id: memberId
       };
@@ -2147,16 +2147,14 @@
       }
 
       // — Store member info for later notify (sent after receipt upload) —
-      if (fd.get('idType') === 'physical') {
-        window._memberNotifyData = {
-          firstName: fd.get('firstName') || '',
-          lastName: fd.get('lastName') || '',
-          email: fd.get('email') || '',
-          memberId: memberId,
-          barangay: fd.get('barangay') || '',
-          skateName: fd.get('skateName') || ''
-        };
-      }
+      window._memberNotifyData = {
+        firstName: fd.get('firstName') || '',
+        lastName: fd.get('lastName') || '',
+        email: fd.get('email') || '',
+        memberId: memberId,
+        barangay: fd.get('barangay') || '',
+        skateName: fd.get('skateName') || ''
+      };
 
       // — Success: show success screen —
       populateDigitalID(memberId);
@@ -2164,22 +2162,15 @@
       window.scrollTo({ top: 0 });
       requestAnimationFrame(scaleIdPreview);
 
-      // If Physical ID selected, hide digital ID card and show GCash payment only
-      const selectedIdType = document.querySelector('input[name="idType"]:checked');
+      // Physical ID is always required — always show GCash payment section
       const gcashSection = document.getElementById('gcashPaymentSection');
       const idCardWrapper = document.getElementById('idCaptureWrapper');
       const upgradeBtn = document.querySelector('.upgrade-to-physical-btn');
-      if (selectedIdType && selectedIdType.value === 'physical') {
-        if (idCardWrapper) idCardWrapper.style.display = 'none';
-        if (upgradeBtn) upgradeBtn.style.display = 'none';
-        if (gcashSection) {
-          gcashSection.style.display = 'block';
-          setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-        }
-      } else {
-        if (idCardWrapper) idCardWrapper.style.display = '';
-        if (upgradeBtn) upgradeBtn.style.display = '';
-        if (gcashSection) gcashSection.style.display = 'none';
+      if (idCardWrapper) idCardWrapper.style.display = '';
+      if (upgradeBtn) upgradeBtn.style.display = 'none';
+      if (gcashSection) {
+        gcashSection.style.display = 'block';
+        setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
       }
     })();
   });
@@ -2222,7 +2213,7 @@
     document.getElementById('idSkateName').textContent = get('skateName') || '—';
     const skill = document.querySelector('input[name="skillLevel"]:checked');
     document.getElementById('idSkillLevel').textContent = skill ? skill.value : '—';
-    document.getElementById('idYears').textContent = get('yearsSkating') || '—';
+    document.getElementById('idYears').textContent = get('yearsRiding') || '—';
 
     // Skate styles (multi-check)
     const styles = [...document.querySelectorAll('input[name="style"]:checked')].map(c => c.value);
@@ -2439,7 +2430,7 @@
     </div>
     <div class="pickup-info-row">
       <span class="pickup-info-label">Ready in</span>
-      <span class="pickup-info-value">7 Days</span>
+      <span class="pickup-info-value">7–14 Days</span>
     </div>
     <div class="pickup-info-row">
       <span class="pickup-info-label">Payment</span>
@@ -2448,7 +2439,7 @@
 
     <!-- Helper text -->
     <div class="field-hint" style="margin-top:16px;">// We'll reach out with payment and pickup details after you submit.</div>
-    <div class="field-hint" style="margin-top:8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
+    <div class="field-hint" style="margin-top:8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community sessions, and keeping MSBC running.</div>
 
     <!-- Acknowledgment -->
     <div style="margin-top:18px; display:flex; align-items:flex-start; gap:8px;">
