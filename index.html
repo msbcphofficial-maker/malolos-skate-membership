@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="Join the Crew — Malolos Skateboarding">
 <meta name="twitter:description" content="Sign up for your official Malolos Skateboarding membership. Get your digital ID and join the local skate scene.">
 <meta name="twitter:image" content="https://join.msbcskate.org/og-image.png">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@700&family=Roboto+Mono:wght@400&family=Squada+One&family=Jura:wght@700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -898,6 +898,105 @@
   }
   .id-award-item:last-child { border-bottom: none; }
 
+  /* ── MSBC CARD (BMX / Scooter) ──────────────────────────────────────── */
+  .id-capture-wrapper--msbc {
+    background: #9B1D20;
+    padding: 40px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .id-capture-wrapper--msbc .msbc-card-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: -50px;
+    position: relative;
+    z-index: 2;
+  }
+  .digital-id--msbc {
+    width: 100%;
+    background: #ffffff;
+    color: #111820;
+    padding-top: 70px;
+    padding-bottom: 40px;
+  }
+  .digital-id--msbc .id-fullname {
+    font-family: 'Squada One', sans-serif;
+    font-size: 27px;
+    letter-spacing: 1.5px;
+    color: #111820;
+    line-height: 1.05;
+    margin-bottom: 4px;
+  }
+  .digital-id--msbc .id-number {
+    display: inline-block;
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    color: #111820;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    background: #DEDFE3;
+    padding: 3px 8px;
+  }
+  .digital-id--msbc .id-meta {
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    color: #333d4a;
+    line-height: 1.8;
+  }
+  .digital-id--msbc .id-field-label {
+    font-family: 'Squada One', sans-serif;
+    font-size: 19px;
+    letter-spacing: 1.5px;
+    color: #111820;
+    width: 150px;
+    flex-shrink: 0;
+    text-align: left;
+    padding-right: 20px;
+    text-transform: uppercase;
+  }
+  .digital-id--msbc .id-field-value {
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #333d4a;
+    flex: 1;
+    word-break: break-word;
+    text-align: left;
+  }
+  .digital-id--msbc .id-awards-title {
+    font-family: 'Squada One', sans-serif;
+    font-size: 19px;
+    letter-spacing: 1.5px;
+    color: #111820;
+    margin-bottom: 10px;
+    text-align: left;
+    text-transform: uppercase;
+  }
+  .digital-id--msbc .id-award-item {
+    font-family: 'Jura', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #333d4a;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(17,24,32,0.15);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .digital-id--msbc .id-award-item::before {
+    content: '●';
+    color: #9B1D20;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
   /* Download button */
   .id-download-btn {
     width: 100%;
@@ -1400,7 +1499,112 @@
 <div class="success-screen" id="successScreen" role="status" aria-live="assertive" aria-atomic="true">
 
 
-  <!-- DIGITAL ID CARD REMOVED -->
+  <!-- DIGITAL ID CARD — Skateboarding / Fingerboarding -->
+  <div id="idCaptureWrapper" class="id-capture-wrapper" style="display:none; position:fixed; top:-9999px; left:-9999px; width:460px;">
+    <div class="digital-id" id="digitalIdCard">
+      <div class="id-body">
+        <div class="id-profile-row">
+          <div id="idPhotoWrap">
+            <div class="id-photo-placeholder">👤</div>
+          </div>
+          <div class="id-name-block">
+            <div class="id-fullname" id="idFullName">—</div>
+            <div class="id-number" id="idNumber">ID NO. 2026-0001</div>
+            <div class="id-meta">
+              Member since <span id="idMemberYear">2026</span><br>
+              <span id="idBarangay">Malolos</span>
+            </div>
+          </div>
+        </div>
+        <hr class="id-divider">
+        <div class="id-fields">
+          <div class="id-field-row">
+            <span class="id-field-label">Rider Name</span>
+            <span class="id-field-value" id="idSkateName">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Skill Level</span>
+            <span class="id-field-value" id="idSkillLevel">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Years Riding</span>
+            <span class="id-field-value" id="idYears">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Riding Style</span>
+            <span class="id-field-value" id="idStyle">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Home Spot</span>
+            <span class="id-field-value" id="idHomeSpot">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Go-To Trick</span>
+            <span class="id-field-value" id="idGoToTrick">—</span>
+          </div>
+        </div>
+        <div class="id-awards-section" id="idAwardsSection" style="display:none;">
+          <hr class="id-divider" style="margin: 6px 0 12px;">
+          <div class="id-awards-title">Awards, Roles &amp; Highlights</div>
+          <div id="idAwardsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIGITAL ID CARD — BMX / Scooter -->
+  <div id="idCaptureWrapperMSBC" class="id-capture-wrapper id-capture-wrapper--msbc" style="display:none; position:fixed; top:-9999px; left:-9999px; width:460px;">
+    <img src="MSBC_round_red white.png" alt="MSBC Logo" class="msbc-card-logo">
+    <div class="digital-id digital-id--msbc" id="digitalIdCardMSBC">
+      <div class="id-body">
+        <div class="id-profile-row">
+          <div id="idPhotoWrapMSBC">
+            <div class="id-photo-placeholder">👤</div>
+          </div>
+          <div class="id-name-block">
+            <div class="id-fullname" id="idFullNameMSBC">—</div>
+            <div class="id-number" id="idNumberMSBC">ID NO. 2026-0001</div>
+            <div class="id-meta">
+              Member since <span id="idMemberYearMSBC">2026</span><br>
+              <span id="idBarangayMSBC">Malolos</span>
+            </div>
+          </div>
+        </div>
+        <hr class="id-divider">
+        <div class="id-fields">
+          <div class="id-field-row">
+            <span class="id-field-label">Rider Name</span>
+            <span class="id-field-value" id="idSkateNameMSBC">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Skill Level</span>
+            <span class="id-field-value" id="idSkillLevelMSBC">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Years Riding</span>
+            <span class="id-field-value" id="idYearsMSBC">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Riding Style</span>
+            <span class="id-field-value" id="idStyleMSBC">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Home Spot</span>
+            <span class="id-field-value" id="idHomeSpotMSBC">—</span>
+          </div>
+          <div class="id-field-row">
+            <span class="id-field-label">Go-To Trick</span>
+            <span class="id-field-value" id="idGoToTrickMSBC">—</span>
+          </div>
+        </div>
+        <div class="id-awards-section" id="idAwardsSectionMSBC" style="display:none;">
+          <hr class="id-divider" style="margin: 6px 0 12px;">
+          <div class="id-awards-title">Awards, Roles &amp; Highlights</div>
+          <div id="idAwardsListMSBC"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="id-footer">
     <button class="upgrade-to-physical-btn" onclick="showUpgradeModal()" aria-label="Upgrade to Physical ID">
       <i class="ph ph-identification-card" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
@@ -1603,6 +1807,49 @@
       Payment received. We'll email you when your physical ID is ready for pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan
     </div>
   </div>
+
+  <div style="margin-bottom:12px;"></div>
+
+  <!-- Download Digital ID block -->
+  <div style="width:100%; max-width:460px;">
+
+    <div style="
+      border: 2px solid rgba(167,211,191,0.4);
+      background: rgba(167,211,191,0.04);
+      overflow: hidden;
+    ">
+      <div style="padding:24px 20px;">
+        <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; line-height:1.9; margin-bottom:24px; text-align:center;">
+          Save your digital ID now and flex it while your physical card gets printed.
+        </div>
+
+        <button onclick="downloadDigitalID(this)" style="
+          width: 100%;
+          background: #A7D3BF;
+          color: #0f1720;
+          border: none;
+          font-family: 'Barlow', sans-serif;
+          font-weight: 700;
+          font-size: clamp(14px, 4vw, 21px);
+          letter-spacing: 0.2em;
+          padding: 15px;
+          cursor: pointer;
+          transition: background 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          white-space: nowrap;
+        " onmouseover="this.style.background='#9dbdad'" onmouseout="this.style.background='#A7D3BF'">
+          <i class="ph ph-download-simple" style="font-size:28px;line-height:1;"></i>
+          DOWNLOAD DIGITAL ID
+        </button>
+
+        <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; margin-top:12px; text-align:center;">
+          // Saved as a JPG image to your device
+        </div>
+      </div>
+    </div>
 
   <div style="width:100%; max-width:460px;">
     <div style="margin-top:32px; display:flex; gap:24px; justify-content:center; align-items:center;">
@@ -2201,6 +2448,43 @@
     } else {
       awardsSection.style.display = 'none';
     }
+
+    // Populate MSBC card (BMX/Scooter) with same data
+    const setMSBC = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setMSBC('idFullNameMSBC', (first + ' ' + last).toUpperCase() || '--');
+    setMSBC('idMemberYearMSBC', new Date().getFullYear());
+    setMSBC('idBarangayMSBC', [get('barangay'), get('city')].filter(Boolean).join(', ') || 'Malolos');
+    setMSBC('idNumberMSBC', 'ID NO. ' + (memberId || '2026----'));
+    setMSBC('idSkateNameMSBC', get('skateName') || '—');
+    setMSBC('idSkillLevelMSBC', (document.querySelector('input[name="skillLevel"]:checked') || {}).value || '—');
+    setMSBC('idYearsMSBC', get('yearsRiding') || '—');
+    const stylesMSBC = [...document.querySelectorAll('input[name="style"]:checked')].map(c => c.value);
+    setMSBC('idStyleMSBC', stylesMSBC.length ? stylesMSBC.join(', ') : '—');
+    setMSBC('idHomeSpotMSBC', get('homeSpot') || '—');
+    setMSBC('idGoToTrickMSBC', get('bestTrick') || '—');
+    // Profile photo for MSBC card
+    const photoWrapMSBC = document.getElementById('idPhotoWrapMSBC');
+    if (croppedDataURL && photoWrapMSBC) {
+      photoWrapMSBC.innerHTML = '';
+      const img2 = document.createElement('img');
+      img2.src = croppedDataURL; img2.className = 'id-photo'; img2.alt = 'Profile';
+      photoWrapMSBC.appendChild(img2);
+    }
+    // Awards for MSBC card
+    const awardsSecMSBC = document.getElementById('idAwardsSectionMSBC');
+    const awardsListMSBC = document.getElementById('idAwardsListMSBC');
+    if (awards.length > 0 && awardsListMSBC) {
+      awardsListMSBC.innerHTML = '';
+      awards.forEach(function(a) {
+        const div = document.createElement('div');
+        div.className = 'id-award-item';
+        div.textContent = a;
+        awardsListMSBC.appendChild(div);
+      });
+      if (awardsSecMSBC) awardsSecMSBC.style.display = 'block';
+    } else {
+      if (awardsSecMSBC) awardsSecMSBC.style.display = 'none';
+    }
   }
 
 
@@ -2224,7 +2508,9 @@
         ]);
       }
 
-      const card = document.getElementById('idCaptureWrapper');
+      const discipline = (document.querySelector('input[name="discipline"]:checked') || {}).value || '';
+      const isMSBC = ['BMX', 'Scooter'].includes(discipline);
+      const card = document.getElementById(isMSBC ? 'idCaptureWrapperMSBC' : 'idCaptureWrapper');
       const creamCard = card.querySelector('.digital-id');
 
       // Reset preview scale before capture so download is unaffected
@@ -2304,7 +2590,8 @@
       const link = document.createElement('a');
       const first = (document.querySelector('[name="firstName"]') || {}).value || 'member';
       const last = (document.querySelector('[name="lastName"]') || {}).value || '';
-      link.download = ('Malolos-Skateboarding-ID-' + first + '-' + last + '.jpg').replace(/\s+/g, '-');
+      const prefix = isMSBC ? 'MSBC-ID-' : 'Malolos-Skateboarding-ID-';
+      link.download = (prefix + first + '-' + last + '.jpg').replace(/\s+/g, '-');
       link.href = canvas.toDataURL('image/jpeg', 0.95);
       link.click();
     } catch (err) {
