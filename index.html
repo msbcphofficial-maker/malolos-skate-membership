@@ -1267,7 +1267,6 @@
               <li>&#x2022; Exclusive physical design.</li>
             </ul></div>
         </div>
-        <i class="ph ph-caret-down" id="physicalIdCaret" style="font-size:22px; color:var(--sage); transition:transform 0.25s; flex-shrink:0;" aria-hidden="true"></i>
       </div>
       <div id="physicalIdDetails" style="display:none;">
         <div class="delivery-section" id="deliverySection" style="display:block; margin-top:0;">
@@ -1826,12 +1825,11 @@
   function togglePhysicalDetails() {
     var card = document.getElementById('physicalIdCard');
     var details = document.getElementById('physicalIdDetails');
-    var caret = document.getElementById('physicalIdCaret');
+
     var expanded = card.getAttribute('aria-expanded') === 'true';
     card.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     details.style.display = expanded ? 'none' : '';
     card.classList.toggle('physical-id-open', !expanded);
-    if (caret) caret.style.transform = expanded ? '' : 'rotate(180deg)';
   }
 
   // Toggle address fields
