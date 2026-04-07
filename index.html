@@ -2600,51 +2600,40 @@
         input.value = '';
         return;
       }
-      var reader = new FileReader();
-      reader.onerror = function() {
-        alert('Could not read the image file. Please try a different photo.');
-      };
-      reader.onload = function(e) {
-        console.log('[photo] reader.onload fired');
-        try {
-          var cropImg = document.getElementById('cropImage');
-          var cropModal = document.getElementById('cropModal');
-          console.log('[photo] cropImg:', cropImg ? 'found' : 'NULL', 'cropModal:', cropModal ? 'found' : 'NULL');
-          if (!cropImg || !cropModal) {
-            alert('Crop tool not found. Please refresh the page and try again.');
-            return;
-          }
-          cropImg.src = e.target.result;
-          cropModal.style.display = 'flex';
-          console.log('[photo] cropModal display set, current style:', cropModal.style.display);
-          if (cropper) { try { cropper.destroy(); } catch(e2) {} cropper = null; }
+      // Use createObjectURL — synchronous, no async FileReader needed
+      try {
+        var objectURL = URL.createObjectURL(file);
+        var cropImg = document.getElementById('cropImage');
+        var cropModal = document.getElementById('cropModal');
+        console.log('[photo] cropImg:', cropImg ? 'found' : 'NULL', 'cropModal:', cropModal ? 'found' : 'NULL');
+        if (!cropImg || !cropModal) {
+          alert('Crop tool not found. Please refresh the page and try again.');
+          return;
+        }
+        if (cropper) { try { cropper.destroy(); } catch(e2) {} cropper = null; }
+        cropImg.onload = function() {
+          URL.revokeObjectURL(objectURL);
+          console.log('[photo] cropImg loaded, initialising Cropper');
           setTimeout(function() {
             try {
               cropper = new Cropper(cropImg, {
-                aspectRatio: 1,
-                viewMode: 1,
-                dragMode: 'move',
-                autoCropArea: 0.9,
-                movable: true,
-                zoomable: true,
-                rotatable: false,
-                scalable: false,
-                background: false,
-                modal: true,
-                guides: false,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
+                aspectRatio: 1, viewMode: 1, dragMode: 'move',
+                autoCropArea: 0.9, movable: true, zoomable: true,
+                rotatable: false, scalable: false, background: false,
+                modal: true, guides: false, highlight: false,
+                cropBoxMovable: true, cropBoxResizable: true,
               });
             } catch(cropErr) {
-              alert('Crop tool error: ' + cropErr.message + '. Try refreshing the page.');
+              alert('Crop tool error: ' + cropErr.message);
             }
           }, 100);
-        } catch(innerErr) {
-          alert('Photo preview error: ' + innerErr.message);
-        }
-      };
-      reader.readAsDataURL(file);
+        };
+        cropImg.src = objectURL;
+        cropModal.style.display = 'flex';
+        console.log('[photo] modal shown');
+      } catch(urlErr) {
+        alert('Could not load image: ' + urlErr.message);
+      }
     } catch(outerErr) {
       alert('Upload error: ' + outerErr.message);
     }
