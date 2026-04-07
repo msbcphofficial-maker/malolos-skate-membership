@@ -1246,72 +1246,50 @@
       <div class="section-line"></div>
     </div>
 
+    <!-- PHYSICAL ID — tap to expand details -->
     <div class="field-group">
-      <label>Choose Your ID Type <span class="required">*</span></label>
-      <div class="id-cards">
+      <div id="physicalIdCard" onclick="togglePhysicalDetails()" role="button" tabindex="0" aria-expanded="false" aria-controls="physicalIdDetails" style="cursor:pointer; border:2px solid var(--grime); padding:20px; background:var(--navy-mid); display:flex; align-items:center; justify-content:space-between; user-select:none; transition:border-color 0.2s;">
         <div>
-          <input type="radio" name="idType" id="idDigital" value="digital" class="id-card-radio" required onchange="toggleDelivery()">
-          <label for="idDigital" class="id-card">
-            <div class="id-price-badge">FREE</div>
-            <div class="id-card-type">Digital ID</div>
-            <div class="id-card-price">JPG Download</div>
-            <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
-                <li>&#x2022; Downloadable instantly after sign-up.</li>
-                <li>&#x2022; Mobile-ready format.</li>
-                <li>&#x2022; Your official Malolos Skateboarding member card.</li>
-              </ul></div>
-          </label>
+          <div class="id-price-badge" style="margin-bottom:8px;">₱250</div>
+          <div class="id-card-type">Physical ID</div>
+          <div class="id-card-price">PAID · Required for all members</div>
         </div>
-        <div>
-          <input type="radio" name="idType" id="idPhysical" value="physical" class="id-card-radio" onchange="toggleDelivery()">
-          <label for="idPhysical" class="id-card">
-            <div class="id-price-badge">₱250</div>
-            <div class="id-card-type">Physical ID</div>
-            <div class="id-card-price">PAID · Ready in 1 Week</div>
-            <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
-                <li>&#x2022; Premium printed card.</li>
-                <li>&#x2022; Exclusive physical design.</li>
-                <li>&#x2022; Pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.</li>
-              </ul>
-              <em style="display:block;margin-top:8px;">Optional &mdash; you can still join for free with just the Digital ID.</em></div>
-          </label>
-        </div>
+        <i class="ph ph-caret-down" id="physicalIdCaret" style="font-size:22px; color:var(--sage); transition:transform 0.25s; flex-shrink:0;" aria-hidden="true"></i>
       </div>
-      <div id="idTypeError" class="error-msg">Please select your ID type.</div></div>
-
-    <!-- PHYSICAL ID DELIVERY OPTIONS -->
-    <div class="delivery-section" id="deliverySection">
-      <div class="pickup-info-row">
-        <span class="pickup-info-label">Pickup</span>
-        <span class="pickup-info-value" id="pickupLocation" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
-          Explore Co. 100 A. Mabini, Malolos, Bulacan
-          <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" title="Get directions" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size: 14px;white-space:nowrap;opacity:0.85;">
-            <i class="ph ph-map-pin" style="font-size:14px;vertical-align:middle;"></i>
-            Directions
-          </a>
-        </span>
-      </div>
-      <div class="pickup-info-row">
-        <span class="pickup-info-label">Ready in</span>
-        <span class="pickup-info-value">7 Days</span>
-      </div>
-      <div class="pickup-info-row">
-        <span class="pickup-info-label">Payment</span>
-        <span class="pickup-info-value">GCash</span>
-      </div>
-      <div class="field-hint" style="margin-top: 12px;">// We'll reach out with payment and pickup details after you submit.</div>
-      <div class="field-hint" style="margin-top: 8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
-      <div style="margin-top:14px; display:flex; align-items:flex-start; gap:8px;">
-        <input type="checkbox" id="deliveryAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;">
-        <label for="deliveryAck" style="font-family:'Roboto Mono', monospace; font-size: 11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that Physical ID requires ₱250 GCash payment and pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.</label>
-      </div>
-      <div class="error-msg" id="deliveryAckError">Please check the box above before submitting.</div>
-
-      <!-- PHYSICAL CARD PREVIEW -->
-      <div class="phys-preview-wrap">
-        <div class="phys-preview-heading">// Card Preview</div>
-        <div class="phys-card-stack">
-          <img class="phys-card-img" src="ID%20Mockup.jpg" alt="Physical ID Mockup" style="width:100%;border-radius:0;display:block;margin:0 auto;">
+      <div id="physicalIdDetails" style="display:none;">
+        <div class="delivery-section" id="deliverySection" style="display:block; margin-top:0;">
+          <div class="pickup-info-row">
+            <span class="pickup-info-label">Pickup</span>
+            <span class="pickup-info-value" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
+              Explore Co. 100 A. Mabini, Malolos, Bulacan
+              <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" title="Get directions" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size: 14px;white-space:nowrap;opacity:0.85;">
+                <i class="ph ph-map-pin" style="font-size:14px;vertical-align:middle;"></i>
+                Directions
+              </a>
+            </span>
+          </div>
+          <div class="pickup-info-row">
+            <span class="pickup-info-label">Ready in</span>
+            <span class="pickup-info-value">7–14 Days</span>
+          </div>
+          <div class="pickup-info-row">
+            <span class="pickup-info-label">Payment</span>
+            <span class="pickup-info-value">GCash</span>
+          </div>
+          <div class="field-hint" style="margin-top: 12px;">// We'll reach out with payment and pickup details after you submit.</div>
+          <div class="field-hint" style="margin-top: 8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
+          <div style="margin-top:14px; display:flex; align-items:flex-start; gap:8px;">
+            <input type="checkbox" id="deliveryAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;">
+            <label for="deliveryAck" style="font-family:'Roboto Mono', monospace; font-size: 11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none;">I understand that Physical ID requires ₱250 GCash payment and pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan.</label>
+          </div>
+          <div class="error-msg" id="deliveryAckError">Please check the box above before submitting.</div>
+          <!-- PHYSICAL CARD PREVIEW -->
+          <div class="phys-preview-wrap">
+            <div class="phys-preview-heading">// Card Preview</div>
+            <div class="phys-card-stack">
+              <img class="phys-card-img" src="ID%20Mockup.jpg" alt="Physical ID Mockup" style="width:100%;border-radius:0;display:block;margin:0 auto;">
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1404,10 +1382,6 @@
     <button id="id-download-btn" class="id-download-btn" onclick="downloadDigitalID(this)">
       <i class="ph ph-download-simple" style="font-size:28px;line-height:1;" aria-hidden="true"></i>
       DOWNLOAD DIGITAL ID
-    </button>
-    <button class="upgrade-to-physical-btn" onclick="showUpgradeModal()" aria-label="Upgrade to Physical ID">
-      <i class="ph ph-identification-card" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
-      UPGRADE TO PHYSICAL ID
     </button>
   </div>
 
@@ -1722,49 +1696,6 @@
     if (btn) { btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; }
   }
 
-  // ── UPGRADE TO PHYSICAL ID ──
-  function showUpgradeModal() {
-    const modal = document.getElementById('upgradeModal');
-    const ack   = document.getElementById('upgradeAck');
-    const btn   = document.getElementById('upgradeConfirmBtn');
-    if (ack) ack.checked = false;
-    if (btn) { btn.disabled = true; btn.setAttribute('aria-disabled','true'); btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed'; }
-    if (modal) modal.style.display = 'flex';
-  }
-
-  function closeUpgradeModal() {
-    const modal = document.getElementById('upgradeModal');
-    if (modal) modal.style.display = 'none';
-  }
-
-  function toggleUpgradeConfirmBtn() {
-    const ack = document.getElementById('upgradeAck');
-    const btn = document.getElementById('upgradeConfirmBtn');
-    if (!ack || !btn) return;
-    if (ack.checked) {
-      btn.disabled = false;
-      btn.setAttribute('aria-disabled','false');
-      btn.style.opacity = '1';
-      btn.style.cursor  = 'pointer';
-    } else {
-      btn.disabled = true;
-      btn.setAttribute('aria-disabled','true');
-      btn.style.opacity = '0.4';
-      btn.style.cursor  = 'not-allowed';
-    }
-  }
-
-  function confirmUpgrade() {
-    closeUpgradeModal();
-    window._isUpgrade = true;
-    const gcashSection = document.getElementById('gcashPaymentSection');
-    if (gcashSection) {
-      gcashSection.style.display = 'block';
-      setTimeout(function() {
-        gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }
 
   // Show printing screen
   function showPrintingScreen() {
@@ -1878,16 +1809,16 @@
     progressBar.style.width = Math.min(pct, 100) + '%';
   });
 
-  // Toggle delivery section
-  function toggleDelivery() {
-    const physical = document.getElementById('idPhysical').checked;
-    const section = document.getElementById('deliverySection');
-    section.classList.toggle('visible', physical);
-    // Reset acknowledgment when switching ID types
-    const ack = document.getElementById('deliveryAck');
-    const ackErr = document.getElementById('deliveryAckError');
-    if (ack) ack.checked = false;
-    if (ackErr) ackErr.classList.remove('visible');
+  // Toggle Physical ID details panel
+  function togglePhysicalDetails() {
+    var card = document.getElementById('physicalIdCard');
+    var details = document.getElementById('physicalIdDetails');
+    var caret = document.getElementById('physicalIdCaret');
+    var expanded = card.getAttribute('aria-expanded') === 'true';
+    card.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    details.style.display = expanded ? 'none' : '';
+    card.style.borderColor = expanded ? 'var(--grime)' : 'var(--sage)';
+    if (caret) caret.style.transform = expanded ? '' : 'rotate(180deg)';
   }
 
   // Toggle address fields
@@ -1929,13 +1860,10 @@
     const disciplineChecked = document.querySelectorAll('input[name="discipline"]:checked'); const disciplineError = document.getElementById('disciplineError'); if (!disciplineChecked.length) { valid = false; if(disciplineError) disciplineError.classList.add('visible'); } else { if(disciplineError) disciplineError.classList.remove('visible'); }
     const skillSelected = document.querySelector('input[name="skillLevel"]:checked'); const skillError = document.getElementById('skillError'); if (!skillSelected) { valid = false; if(skillError) skillError.classList.add('visible'); } else { if(skillError) skillError.classList.remove('visible'); }
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
-    const idTypeSelected = document.querySelector('input[name="idType"]:checked'); const idTypeError = document.getElementById('idTypeError'); if (!idTypeSelected) { valid = false; if(idTypeError) idTypeError.classList.add('visible'); } else { if(idTypeError) idTypeError.classList.remove('visible'); }
-    if (idTypeSelected && idTypeSelected.value === 'physical') {
-      const deliveryAck = document.getElementById('deliveryAck');
-      const deliveryAckError = document.getElementById('deliveryAckError');
-      if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
-      else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
-    }
+    const deliveryAck = document.getElementById('deliveryAck');
+    const deliveryAckError = document.getElementById('deliveryAckError');
+    if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
+    else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
     // Awards are optional — empty rows are filtered on submit (no silent DOM removal)
 
 
@@ -2040,8 +1968,8 @@
         home_spot: fd.get('homeSpot') || null,
         go_to_trick: fd.get('bestTrick') || null,
         awards: awardVals.length ? awardVals.join(', ') : null,
-        id_type: fd.get('idType') || null,
-        payment_status: fd.get('idType') === 'physical' ? 'unpaid' : null,
+        id_type: 'physical',
+        payment_status: 'unpaid',
         photo_url: photoURL,
         member_id: memberId
       };
@@ -2071,16 +1999,14 @@
       }
 
       // — Store member info for later notify (sent after receipt upload) —
-      if (fd.get('idType') === 'physical') {
-        window._memberNotifyData = {
-          firstName: fd.get('firstName') || '',
-          lastName: fd.get('lastName') || '',
-          email: fd.get('email') || '',
-          memberId: memberId,
-          barangay: fd.get('barangay') || '',
-          skateName: fd.get('skateName') || ''
-        };
-      }
+      window._memberNotifyData = {
+        firstName: fd.get('firstName') || '',
+        lastName: fd.get('lastName') || '',
+        email: fd.get('email') || '',
+        memberId: memberId,
+        barangay: fd.get('barangay') || '',
+        skateName: fd.get('skateName') || ''
+      };
 
       // — Success: show success screen —
       populateDigitalID(memberId);
@@ -2088,22 +2014,13 @@
       window.scrollTo({ top: 0 });
       requestAnimationFrame(scaleIdPreview);
 
-      // If Physical ID selected, hide digital ID card and show GCash payment only
-      const selectedIdType = document.querySelector('input[name="idType"]:checked');
+      // Physical ID always required — hide digital ID card, show GCash payment
       const gcashSection = document.getElementById('gcashPaymentSection');
       const idCardWrapper = document.getElementById('idCaptureWrapper');
-      const upgradeBtn = document.querySelector('.upgrade-to-physical-btn');
-      if (selectedIdType && selectedIdType.value === 'physical') {
-        if (idCardWrapper) idCardWrapper.style.display = 'none';
-        if (upgradeBtn) upgradeBtn.style.display = 'none';
-        if (gcashSection) {
-          gcashSection.style.display = 'block';
-          setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
-        }
-      } else {
-        if (idCardWrapper) idCardWrapper.style.display = '';
-        if (upgradeBtn) upgradeBtn.style.display = '';
-        if (gcashSection) gcashSection.style.display = 'none';
+      if (idCardWrapper) idCardWrapper.style.display = 'none';
+      if (gcashSection) {
+        gcashSection.style.display = 'block';
+        setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
       }
     })();
   });
@@ -2339,73 +2256,6 @@
   });
 </script>
 <!-- CROP MODAL -->
-<!-- UPGRADE TO PHYSICAL ID MODAL -->
-<div id="upgradeModal" role="dialog" aria-modal="true" aria-label="Upgrade to Physical ID" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:10000; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
-  <div style="max-width:460px; width:100%; background:var(--navy-mid); border:1px solid var(--sage); padding:28px 24px 24px; display:flex; flex-direction:column; gap:0; position:relative;">
-
-    <!-- Close -->
-    <button onclick="closeUpgradeModal()" aria-label="Close upgrade modal" style="position:absolute; top:14px; right:14px; background:none; border:none; color:var(--sage); cursor:pointer; padding:4px; line-height:1;">
-      <i class="ph ph-x" style="font-size:22px;" aria-hidden="true"></i>
-    </button>
-
-    <!-- Heading -->
-    <div style="font-family:'Road Rage', sans-serif; font-size:clamp(21px,5vw,27px); color:var(--sage); letter-spacing:0.08em; margin-bottom:20px; padding-right:32px;">UPGRADE TO PHYSICAL ID</div>
-
-    <!-- Info rows -->
-    <div class="pickup-info-row">
-      <span class="pickup-info-label">Pickup</span>
-      <span class="pickup-info-value" style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
-        Explore Co. 100 A. Mabini, Malolos, Bulacan
-        <a href="https://maps.app.goo.gl/wPqxJC27qkN14BY88" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:3px;color:var(--sage);text-decoration:none;font-size:14px;white-space:nowrap;opacity:0.85;">
-          <i class="ph ph-map-pin" style="font-size:14px;" aria-hidden="true"></i>Directions
-        </a>
-      </span>
-    </div>
-    <div class="pickup-info-row">
-      <span class="pickup-info-label">Ready in</span>
-      <span class="pickup-info-value">7 Days</span>
-    </div>
-    <div class="pickup-info-row">
-      <span class="pickup-info-label">Payment</span>
-      <span class="pickup-info-value">GCash</span>
-    </div>
-
-    <!-- Helper text -->
-    <div class="field-hint" style="margin-top:16px;">// We'll reach out with payment and pickup details after you submit.</div>
-    <div class="field-hint" style="margin-top:8px;">// Your ₱250 goes directly to supporting the local scene. Card printing, community events, skatepark sessions, and keeping Malolos Skateboarding running.</div>
-
-    <!-- Acknowledgment -->
-    <div style="margin-top:18px; display:flex; align-items:flex-start; gap:8px;">
-      <input type="checkbox" id="upgradeAck" style="flex-shrink:0; margin-top:2px; width:12px; height:12px; min-width:12px; appearance:auto; -webkit-appearance:checkbox; border:none; background:none; padding:0; accent-color:var(--sage); cursor:pointer;" onchange="toggleUpgradeConfirmBtn()">
-      <label for="upgradeAck" style="font-family:'Roboto Mono', monospace; font-size:11px; color:var(--sage-light); cursor:pointer; line-height:1.5; user-select:none; letter-spacing:0.04em;">I UNDERSTAND THAT PHYSICAL ID REQUIRES ₱250 GCASH PAYMENT AND PICKUP AT EXPLORE CO. 100 A. MABINI, MALOLOS, BULACAN.</label>
-    </div>
-
-    <!-- Confirm button -->
-    <button id="upgradeConfirmBtn" onclick="confirmUpgrade()" disabled aria-disabled="true" style="
-      width: 100%;
-      margin-top: 20px;
-      background: #A7D3BF;
-      color: #0f1720;
-      border: none;
-      font-family: 'Barlow', sans-serif;
-      font-weight: 700;
-      font-size: clamp(13px, 3.5vw, 16px);
-      letter-spacing: 0.2em;
-      padding: 14px;
-      cursor: not-allowed;
-      opacity: 0.4;
-      transition: opacity 0.2s, background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    ">
-      <i class="ph ph-identification-card" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
-      YES, I WANT A PHYSICAL ID
-    </button>
-
-  </div>
-</div>
 
 <div id="cropModal" role="dialog" aria-modal="true" aria-label="Crop your photo" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9999; flex-direction:column; align-items:center; justify-content:center; padding:20px;">
   <div style="max-width:420px; width:100%; background:var(--navy-mid); border:1px solid var(--sage); padding:24px; display:flex; flex-direction:column; gap:16px;">
@@ -2472,10 +2322,6 @@ function init(){
   var photoGroup=document.getElementById('photoGroup');
   if(photoGroup)onceInView(photoGroup,{opacity:[0,1],scale:[0.95,1]},{duration:0.4,easing:'ease-out'});
 
-  /* â”€â”€ 6. SCROLL â€” ID type cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  document.querySelectorAll('.id-cards .id-card').forEach(function(card,i){
-    onceInView(card,{opacity:[0,1],y:[20,0]},{duration:0.4,delay:i*0.1,easing:'ease-out'});
-  });
 
 
   /* â”€â”€ 8. PRESS â€” pill labels + ID cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
@@ -2490,7 +2336,6 @@ function init(){
     });
   }
   addPress('.pill-group label');
-  addPress('.id-cards label.id-card');
 
   /* â”€â”€ 9. Submit button â€” state animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   var submitBtn=document.querySelector('.submit-btn');
@@ -2520,12 +2365,8 @@ function init(){
       var sub=successScreen.querySelector('p');
       var wrap=successScreen.querySelector('.id-capture-wrapper');
       var dlBtn=document.getElementById('id-download-btn');
-      var isPhysical=document.getElementById('idPhysical')&&document.getElementById('idPhysical').checked;
-
       if(h1)animate(h1,{opacity:[0,1],scale:[0.5,1]},{duration:0.5,easing:'ease-out'});
       if(sub)animate(sub,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.2,easing:'ease-out'});
-      if(!isPhysical&&wrap)animate(wrap,{opacity:[0,1],y:[40,0]},{duration:0.5,delay:0.3,easing:'ease-out'});
-      if(!isPhysical&&dlBtn)animate(dlBtn,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.8,easing:'ease-out'});
     }).observe(successScreen,{attributes:true,attributeFilter:['class']});
   }
 
@@ -2577,7 +2418,6 @@ function init(){
         try{
           var updateFields = {payment_status:'paid'};
           if(receiptUrl) updateFields.gcash_receipt_url = receiptUrl;
-          if(window._isUpgrade) { updateFields.id_type='physical'; }
           const{error}=await supabaseClient
             .from('members')
             .update(updateFields)
