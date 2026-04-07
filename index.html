@@ -1298,7 +1298,7 @@
           <div class="phys-preview-wrap">
             <div class="phys-preview-heading">// Card Preview</div>
             <div class="phys-card-stack">
-              <img class="phys-card-img" src="ID%20Mockup.jpg" alt="Physical ID Mockup" style="width:100%;border-radius:0;display:block;margin:0 auto;">
+              <img id="physCardPreviewImg" class="phys-card-img" src="ID%20Preview_Malolos%20Skateboarding.jpg" alt="Physical ID Preview" style="width:100%;border-radius:0;display:block;margin:0 auto;">
             </div>
           </div>
         </div>
@@ -2589,15 +2589,27 @@ document.addEventListener('DOMContentLoaded', function () {
     group.style.display = '';
   }
 
+  function updateCardPreview(discipline) {
+    var img = document.getElementById('physCardPreviewImg');
+    if (!img) return;
+    if (discipline === 'BMX' || discipline === 'Scooter') {
+      img.src = 'ID%20Preview_MSBC.jpg';
+    } else {
+      img.src = 'ID%20Preview_Malolos%20Skateboarding.jpg';
+    }
+  }
+
   document.querySelectorAll('input[name="discipline"]').forEach(function (radio) {
     radio.addEventListener('change', function () {
       updateStyles(this.value);
+      updateCardPreview(this.value);
     });
   });
 
   // Init on load in case a value is pre-selected
   var checked = document.querySelector('input[name="discipline"]:checked');
   updateStyles(checked ? checked.value : null);
+  updateCardPreview(checked ? checked.value : null);
 })();
 </script>
 </body>
