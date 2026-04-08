@@ -1972,8 +1972,10 @@
         // Fall back to a random number if the RPC fails
         memberId = '2026-' + String(Math.floor(Math.random() * 9000) + 1000);
       }
-      window._memberId = memberId; // stored for upgrade flow
-      const memberData = {
+      window._memberId = memberId;
+
+      // — Store all member data — Supabase insert happens only after receipt upload + payment —
+      window._pendingMemberData = {
         first_name: fd.get('firstName') || null,
         last_name: fd.get('lastName') || null,
         birthday: fd.get('birthday') || null,
@@ -1993,37 +1995,16 @@
         go_to_trick: fd.get('bestTrick') || null,
         awards: awardVals.length ? awardVals.join(', ') : null,
         id_type: 'physical',
-        payment_status: 'unpaid',
         photo_url: photoURL,
         member_id: memberId
       };
-      try {
-        const { error } = await supabaseClient.from('members').insert([memberData]);
-        if (error) throw new Error(error.message || 'Database error');
-      } catch (err) {
-        showSubmitError('Something went wrong. Please try again.');
-        return;
-      }
-
-      // — Brevo: create contact via secure serverless function —
-      try {
-        await fetch('/api/add-to-brevo', {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            email: fd.get('email'),
-            firstName: fd.get('firstName') || '',
-            lastName: fd.get('lastName') || '',
-            memberId: memberId,
-            discipline: (document.querySelector('input[name="discipline"]:checked') || {}).value || ''
-          })
-        });
-      } catch (err) {
-        // Non-blocking — Brevo failure should not stop the success screen
-        console.warn('Brevo contact creation failed:', err);
-      }
-
-      // — Store member info for later notify (sent after receipt upload) —
+      window._pendingBrevoData = {
+        email: fd.get('email'),
+        firstName: fd.get('firstName') || '',
+        lastName: fd.get('lastName') || '',
+        memberId: memberId,
+        discipline: (document.querySelector('input[name="discipline"]:checked') || {}).value || ''
+      };
       window._memberNotifyData = {
         firstName: fd.get('firstName') || '',
         lastName: fd.get('lastName') || '',
@@ -2462,23 +2443,33 @@ function init(){
           }
         }
 
-        // — Update Supabase record —
+        // — Insert member record to Supabase now that payment is confirmed —
         payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
         try{
-          var updateFields = {payment_status:'paid'};
-          if(receiptUrl) updateFields.gcash_receipt_url = receiptUrl;
-          const{error}=await supabaseClient
-            .from('members')
-            .update(updateFields)
-            .eq('member_id',window._memberId);
-          if(error) throw new Error(error.message||'Update failed');
+          var insertData = Object.assign({}, window._pendingMemberData, {
+            payment_status: 'paid',
+            gcash_receipt_url: receiptUrl || null
+          });
+          const{error}=await supabaseClient.from('members').insert([insertData]);
+          if(error) throw new Error(error.message||'Insert failed');
         }catch(e){
           payBtn.disabled=false;
           payBtn.innerHTML=origPayHTML;
           payBtn.style.opacity='1'; payBtn.style.cursor='pointer';
           animate(payBtn,{scale:1,opacity:1},{duration:0.2});
-          if(errEl){errEl.textContent='Something went wrong updating your record. Please try again.';errEl.style.display='block';}
+          if(errEl){errEl.textContent='Something went wrong saving your record. Please try again.';errEl.style.display='block';}
           return;
+        }
+
+        // — Brevo: send welcome email now that member is confirmed —
+        if(window._pendingBrevoData){
+          try{
+            await fetch('/api/add-to-brevo', {
+              method: 'POST',
+              headers: {'content-type':'application/json'},
+              body: JSON.stringify(window._pendingBrevoData)
+            });
+          }catch(e){ console.warn('Brevo failed:', e); }
         }
 
         // — Notify admin with receipt URL —
