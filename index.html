@@ -2014,7 +2014,8 @@
             email: fd.get('email'),
             firstName: fd.get('firstName') || '',
             lastName: fd.get('lastName') || '',
-            memberId: memberId
+            memberId: memberId,
+            discipline: (document.querySelector('input[name="discipline"]:checked') || {}).value || ''
           })
         });
       } catch (err) {
