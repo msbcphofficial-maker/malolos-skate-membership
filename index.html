@@ -346,6 +346,7 @@
   .id-cards > div { display: flex; }  .id-card { flex: 1; }
   @media (max-width: 460px) {
     .id-cards { grid-template-columns: 1fr; }
+    #disciplinePillGroup label { flex: 0 0 calc(50% - 4px); text-align: center; }
   }
 
   .id-card-radio { display: none; }
@@ -1175,7 +1176,7 @@
 
     <div class="field-group">
       <label>Your Discipline <span class="required">*</span></label>
-      <div class="pill-group" style="flex-wrap:nowrap;">
+      <div class="pill-group" id="disciplinePillGroup" style="flex-wrap:wrap;">
         <input type="radio" name="discipline" id="d1" value="Skateboarding" required>
         <label for="d1" style="flex:1;text-align:center;">Skateboarding</label>
         <input type="radio" name="discipline" id="d2" value="Fingerboarding">
