@@ -19,7 +19,7 @@
 <meta name="twitter:title" content="Join the Crew — Malolos Skateboarding">
 <meta name="twitter:description" content="Sign up for your official Malolos Skateboarding membership. Get your digital ID and join the local skate scene.">
 <meta name="twitter:image" content="https://join.msbcskate.org/og-image.png">
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@700&family=Roboto+Mono:wght@400&family=Squada+One&family=Jura:wght@700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -880,6 +880,17 @@
     font-size: 14px;
     flex-shrink: 0;
   }
+
+  /* ── MSBC THEME — BMX / Scooter digital ID ── */
+  #idCaptureWrapper.msbc-theme { background: #9B1D20; }
+  #idCaptureWrapper.msbc-theme .digital-id { background: #FFFFFF; }
+  #idCaptureWrapper.msbc-theme .id-fullname,
+  #idCaptureWrapper.msbc-theme .id-field-label,
+  #idCaptureWrapper.msbc-theme .id-awards-title { font-family: 'Squada One', sans-serif; }
+  #idCaptureWrapper.msbc-theme .id-number { font-family: 'Jura', sans-serif; font-weight: 700; background: #DEDFE3; color: #111820; }
+  #idCaptureWrapper.msbc-theme .id-meta,
+  #idCaptureWrapper.msbc-theme .id-field-value,
+  #idCaptureWrapper.msbc-theme .id-award-item { font-family: 'Jura', sans-serif; font-weight: 700; }
   .id-award-item:last-child { border-bottom: none; }
 
   /* Download button */
@@ -2097,6 +2108,26 @@
       profileImg.className = 'id-photo';
       profileImg.alt = 'Profile';
       photoWrap.appendChild(profileImg);
+    }
+
+    // Theme: BMX / Scooter → MSBC red design
+    const disciplineEl = document.querySelector('input[name="discipline"]:checked');
+    const isMSBC = disciplineEl && (disciplineEl.value === 'BMX' || disciplineEl.value === 'Scooter');
+    const captureWrapper = document.getElementById('idCaptureWrapper');
+    const idLogo = document.getElementById('idCircleLogo');
+    if (isMSBC) {
+      captureWrapper.classList.add('msbc-theme');
+      if (idLogo) {
+        if (!idLogo.dataset.defaultSrc) idLogo.dataset.defaultSrc = idLogo.src;
+        idLogo.src = 'MSBC_round_red%20white.png';
+        idLogo.alt = 'MSBC';
+      }
+    } else {
+      captureWrapper.classList.remove('msbc-theme');
+      if (idLogo && idLogo.dataset.defaultSrc) {
+        idLogo.src = idLogo.dataset.defaultSrc;
+        idLogo.alt = 'Malolos Skateboarding';
+      }
     }
 
     // Awards
