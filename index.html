@@ -1018,8 +1018,15 @@
 
 </header>
 
+<!-- ENROLLMENT CLOSED SCREEN -->
+<div id="enrollmentClosed" style="display:none;max-width:600px;margin:60px auto;padding:48px 32px;text-align:center;background:#1e2d40;border:1px solid #2a3545;border-radius:8px;">
+  <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+  <div style="font-family:'Anton',sans-serif;font-size:32px;letter-spacing:2px;color:#f0ede8;margin-bottom:12px;">ENROLLMENT CLOSED</div>
+  <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:rgba(240,237,232,0.55);line-height:1.7;">Membership sign-ups are currently closed.<br>Follow our socials for updates on when enrollment reopens.</div>
+</div>
+
 <!-- FORM -->
-<div class="form-wrapper">
+<div class="form-wrapper" id="formWrapper">
   <form id="signupForm" novalidate>
 
     <!-- SECTION 1: PERSONAL INFO -->
@@ -1666,6 +1673,15 @@
   const supabaseUrl = 'https://pgdizsvkxnwkecxyspxp.supabase.co';
   const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBnZGl6c3ZreG53a2VjeHlzcHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4Mjk4NTgsImV4cCI6MjA4OTQwNTg1OH0.9HW_PKvERhzG0EhCt4Q0ARcoxwEAVmyHdPYQEiLUzxI';
   const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // ── Enrollment gate ──────────────────────────────────────────────────────
+  (async function checkEnrollment(){
+    const{data}=await supabaseClient.from('settings').select('value').eq('key','enrollment_open').single();
+    if(data&&data.value==='false'){
+      document.getElementById('formWrapper').style.display='none';
+      document.getElementById('enrollmentClosed').style.display='block';
+    }
+  })();
 
   // Copy GCash number
   function copyGcashNumber() {
