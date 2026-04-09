@@ -1007,7 +1007,7 @@
 <div class="progress-bar" id="progressBar"></div>
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero" id="heroSection">
 
   <img src="MSBC_round_red%20white.png" alt="MSBC Logo" style="width: 110px; height: 110px; object-fit: contain; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;">
 
@@ -1678,6 +1678,7 @@
   (async function checkEnrollment(){
     const{data}=await supabaseClient.from('settings').select('value').eq('key','enrollment_open').single();
     if(data&&data.value==='false'){
+      document.getElementById('heroSection').style.display='none';
       document.getElementById('formWrapper').style.display='none';
       document.getElementById('enrollmentClosed').style.display='block';
     }
