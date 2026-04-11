@@ -2020,7 +2020,7 @@
         firstName: fd.get('firstName') || '',
         lastName: fd.get('lastName') || '',
         memberId: memberId,
-        discipline: (document.querySelector('input[name="discipline"]:checked') || {}).value || ''
+        discipline: [...document.querySelectorAll('input[name="discipline"]:checked')].map(c => c.value).join(', ') || ''
       };
       window._memberNotifyData = {
         firstName: fd.get('firstName') || '',
