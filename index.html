@@ -2410,7 +2410,6 @@ function init(){
 
       var h1=successScreen.querySelector('h1');
       var sub=successScreen.querySelector('p');
-      var wrap=successScreen.querySelector('.id-capture-wrapper');
       var dlBtn=document.getElementById('id-download-btn');
       if(h1)animate(h1,{opacity:[0,1],scale:[0.5,1]},{duration:0.5,easing:'ease-out'});
       if(sub)animate(sub,{opacity:[0,1],y:[20,0]},{duration:0.3,delay:0.2,easing:'ease-out'});
@@ -2428,7 +2427,6 @@ function init(){
   /* â”€â”€ 12. Payment confirm button â€” multi-state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   var payBtn=document.getElementById('paymentConfirmBtn');
   if(payBtn){
-    var origOnclick=payBtn.getAttribute('onclick');
     payBtn.removeAttribute('onclick');
     var origPayHTML=payBtn.innerHTML;
     payBtn.addEventListener('click',function(){
