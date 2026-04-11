@@ -1858,7 +1858,7 @@
 
     var expanded = card.getAttribute('aria-expanded') === 'true';
     card.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-    details.style.display = expanded ? 'none' : '';
+    details.style.display = expanded ? 'none' : 'block';
     card.classList.toggle('physical-id-open', !expanded);
   }
 
