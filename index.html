@@ -2452,10 +2452,10 @@ function init(){
             var ext = receiptFile.name.split('.').pop() || 'jpg';
             var receiptFileName = 'receipt-' + window._memberId + '-' + Date.now() + '.' + ext;
             var{error:uploadErr} = await supabaseClient.storage
-              .from('member-photos')
+              .from('receipt-photos')
               .upload(receiptFileName, receiptFile, {contentType: receiptFile.type, upsert: false});
             if(uploadErr) throw new Error(uploadErr.message);
-            var{data:urlData} = supabaseClient.storage.from('member-photos').getPublicUrl(receiptFileName);
+            var{data:urlData} = supabaseClient.storage.from('receipt-photos').getPublicUrl(receiptFileName);
             receiptUrl = urlData.publicUrl;
           }catch(e){
             payBtn.disabled=false;
