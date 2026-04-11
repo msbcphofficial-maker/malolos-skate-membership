@@ -2509,6 +2509,7 @@ function init(){
           }catch(e){ console.warn('Notify failed:', e); }
         }
 
+        receiptFile = null;
         payBtn.innerHTML='<i class="ph ph-check" style="margin-right:6px;"></i>Confirmed!';
         animate(payBtn,{scale:[0.97,1.02,1],opacity:1},{duration:0.3});
         setTimeout(function(){
