@@ -2438,6 +2438,15 @@ function init(){
       payBtn.innerHTML='<span class="msb-spinner"></span>Uploading receipt\u2026';
       animate(payBtn,{scale:0.97,opacity:0.85},{duration:0.15});
       setTimeout(async function(){
+        // Guard: ensure pending member data exists before proceeding
+        if(!window._pendingMemberData){
+          payBtn.disabled=false;
+          payBtn.innerHTML=origPayHTML;
+          animate(payBtn,{scale:1,opacity:1},{duration:0.2});
+          if(errEl){errEl.textContent='Submission data was lost. Please refresh and try again.';errEl.style.display='block';}
+          return;
+        }
+
         // — Upload receipt to Supabase Storage —
         var receiptUrl = null;
         if(receiptFile && window._memberId){
