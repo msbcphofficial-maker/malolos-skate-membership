@@ -2101,7 +2101,7 @@
 
     // Profile photo
     const photoWrap = document.getElementById('idPhotoWrap');
-    if (croppedDataURL) {
+    if (photoWrap && croppedDataURL) {
       photoWrap.innerHTML = '';
       const profileImg = document.createElement('img');
       profileImg.src = croppedDataURL;
