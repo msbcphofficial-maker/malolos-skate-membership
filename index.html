@@ -1078,12 +1078,6 @@
         <div class="error-msg">Please select your gender.</div></div>
     </div>
 
-    <div class="field-group">
-      <label for="streetAddress">House No. &amp; Street Name <span class="required">*</span></label>
-      <input type="text" id="streetAddress" name="streetAddress" placeholder="e.g. 123 Rizal St." maxlength="100" required>
-      <div class="error-msg">Required field.</div>
-    </div>
-
     <div class="field-row">
       <div class="field-group">
         <label>City / Municipality</label>
@@ -2003,7 +1997,6 @@
         last_name: fd.get('lastName') || null,
         birthday: fd.get('birthday') || null,
         gender: fd.get('gender') || null,
-        street_address: fd.get('streetAddress') || null,
         city: fd.get('city') || null,
         barangay: fd.get('barangay') || null,
         facebook_url: fd.get('facebook') || null,
