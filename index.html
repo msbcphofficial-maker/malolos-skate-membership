@@ -1605,20 +1605,20 @@
   padding: 60px 20px 80px;
 ">
 
-  <!-- Download Digital ID block — shown first so members see it immediately -->
+  <!-- Unified dark card -->
   <div style="width:100%; max-width:460px;">
 
     <div style="
-      border: 2px solid rgba(167,211,191,0.4);
-      background: rgba(167,211,191,0.04);
+      background: var(--navy-mid);
+      border: 1px solid var(--grime);
       overflow: hidden;
     ">
-      <div style="padding:24px 20px;">
-        <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; line-height:1.9; margin-bottom:24px; text-align:center;">
+
+      <!-- Top section: Download button -->
+      <div style="padding:24px 20px 20px;">
+        <div style="font-family:'Roboto Mono', monospace; font-size:13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; line-height:1.9; margin-bottom:16px; text-align:center;">
           Save your digital ID now and flex it while your physical card gets printed.
         </div>
-
-        <!-- Download button -->
         <button onclick="downloadDigitalID(this)" style="
           width: 100%;
           background: #A7D3BF;
@@ -1640,30 +1640,31 @@
           <i class="ph ph-download-simple" style="font-size:28px;line-height:1;"></i>
           DOWNLOAD DIGITAL ID
         </button>
-
-        <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; margin-top:12px; text-align:center;">
+        <div style="font-family:'Roboto Mono', monospace; font-size:11px; color:rgba(167,211,191,0.35); letter-spacing:0.08em; margin-top:12px; text-align:center;">
           // Saved as a JPG image to your device
         </div>
       </div>
+
+      <!-- Sage green divider -->
+      <div style="height:1px; background:#A7D3BF; opacity:0.4; margin:0 20px;"></div>
+
+      <!-- Bottom section: printer icon + body copy -->
+      <div style="padding:24px 20px; display:flex; flex-direction:column; align-items:center; gap:14px; text-align:center;">
+        <i id="printerIcon" class="ph ph-printer" style="font-size:40px; color:#A7D3BF;"></i>
+        <div style="font-family:'Roboto Mono', monospace; font-size:13px; color:rgba(240,237,232,0.7); letter-spacing:0.06em; line-height:1.9;">
+          Your card is in production. We'll hit you up when it's ready for pickup at Explore Co., 100 A. Mabini, Malolos, Bulacan.
+        </div>
+      </div>
+
     </div>
 
-    <!-- Printing icon + headline — shown below download button -->
-    <div style="text-align:center; margin-top:40px; margin-bottom:32px;">
-      <div style="margin-bottom:24px;">
-        <i id="printerIcon" class="ph ph-printer" style="font-size:72px;color:#A7D3BF;"></i>
-      </div>
-      <div style="font-family:'Road Rage', sans-serif; font-size:clamp(37px,9vw,59px); color:#f0ede8; letter-spacing:0.05em; line-height:1; margin-bottom:14px; text-align:center;">YOUR CARD IS BEING PRINTED</div>
-      <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:#f0ede8; letter-spacing:0.08em; line-height:1.9; max-width:460px; width:100%; margin-left:auto; margin-right:auto;">
-        Payment received. We'll email you when your physical ID is ready for pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan
-      </div>
-    </div>
-
+    <!-- Social icons + footer — outside the card -->
     <div style="margin-top:32px; display:flex; gap:24px; justify-content:center; align-items:center;">
       <a href="https://www.facebook.com/malolos.skateandbike.community/" target="_blank" rel="noopener" class="footer-social-link" aria-label="Malolos Skateboarding on Facebook"><i class="ph-fill ph-facebook-logo" style="font-size:22px;" aria-hidden="true"></i></a>
       <a href="https://www.instagram.com/skateandbikemalolos" target="_blank" rel="noopener" class="footer-social-link" aria-label="Malolos Skateboarding on Instagram"><i class="ph-fill ph-instagram-logo" style="font-size:22px;" aria-hidden="true"></i></a>
-    <a href="mailto:hello@msbcskate.org" class="footer-social-link" aria-label="Email Malolos Skateboarding"><i class="ph-fill ph-envelope" style="font-size:22px;" aria-hidden="true"></i></a>
+      <a href="mailto:hello@msbcskate.org" class="footer-social-link" aria-label="Email Malolos Skateboarding"><i class="ph-fill ph-envelope" style="font-size:22px;" aria-hidden="true"></i></a>
     </div>
-    <p style="font-family:'Roboto Mono', monospace;font-size: 11px;color:rgba(167,211,191,0.7);text-align:center;margin-top:16px;line-height:1.7;letter-spacing:0.04em;">All memberships, content, and activities are organized under Malolos Skate and Bike Community Inc.<br>Malolos City, Bulacan, Philippines, 3000</p>
+    <p style="font-family:'Roboto Mono', monospace; font-size:11px; color:rgba(167,211,191,0.7); text-align:center; margin-top:16px; line-height:1.7; letter-spacing:0.04em;">All memberships, content, and activities are organized under Malolos Skate and Bike Community Inc.<br>Malolos City, Bulacan, Philippines, 3000</p>
 
   </div>
 </div>
