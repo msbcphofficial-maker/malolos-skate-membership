@@ -1605,25 +1605,7 @@
   padding: 60px 20px 80px;
 ">
 
-  <!-- Printing icon + headline -->
-  <div style="text-align:center; margin-bottom:40px;">
-
-    <!-- Animated printer icon -->
-    <div style="margin-bottom:24px;">
-      <i id="printerIcon" class="ph ph-printer" style="font-size:72px;color:#A7D3BF;"></i>
-    </div>
-
-    
-    <div style="font-family:'Road Rage', sans-serif; font-size:clamp(37px,9vw,59px); color:#f0ede8; letter-spacing:0.05em; line-height:1; margin-bottom:14px; text-align:center;">YOUR CARD IS BEING PRINTED</div>
-    <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:#f0ede8; letter-spacing:0.08em; line-height:1.9; max-width:460px; width:100%; margin-left:auto; margin-right:auto;">
-      Payment received. We'll email you when your physical ID is ready for pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan
-    </div>
-  </div>
-
-  <!-- Divider -->
-  <div style="margin-bottom:12px;"></div>
-
-  <!-- Download Digital ID block -->
+  <!-- Download Digital ID block — shown first so members see it immediately -->
   <div style="width:100%; max-width:460px;">
 
     <div style="
@@ -1662,6 +1644,17 @@
         <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:rgba(167,211,191,0.7); letter-spacing:0.08em; margin-top:12px; text-align:center;">
           // Saved as a JPG image to your device
         </div>
+      </div>
+    </div>
+
+    <!-- Printing icon + headline — shown below download button -->
+    <div style="text-align:center; margin-top:40px; margin-bottom:32px;">
+      <div style="margin-bottom:24px;">
+        <i id="printerIcon" class="ph ph-printer" style="font-size:72px;color:#A7D3BF;"></i>
+      </div>
+      <div style="font-family:'Road Rage', sans-serif; font-size:clamp(37px,9vw,59px); color:#f0ede8; letter-spacing:0.05em; line-height:1; margin-bottom:14px; text-align:center;">YOUR CARD IS BEING PRINTED</div>
+      <div style="font-family:'Roboto Mono', monospace; font-size: 13px; color:#f0ede8; letter-spacing:0.08em; line-height:1.9; max-width:460px; width:100%; margin-left:auto; margin-right:auto;">
+        Payment received. We'll email you when your physical ID is ready for pickup at Explore Co. 100 A. Mabini, Malolos, Bulacan
       </div>
     </div>
 
