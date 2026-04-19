@@ -403,6 +403,17 @@
   }
 
   /* PHYSICAL ID single card — selected state */
+  /* Digital ID card */
+  #digitalIdCardSelect { position: relative; border: 2px solid var(--grime); padding: 20px; background: var(--navy-mid); cursor: pointer; transition: all 0.2s; height: 100%; }
+  #digitalIdCardSelect::before { content: ""; position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; border: 2px solid rgba(167,211,191,0.4); background: transparent; transition: all 0.2s; }
+  #digitalIdCardSelect.digital-id-selected { border-color: var(--sage) !important; background: var(--sage) !important; }
+  #digitalIdCardSelect.digital-id-selected::before { border-color: var(--navy-deep); background: var(--navy-deep); box-shadow: inset 0 0 0 4px var(--sage); }
+  #digitalIdCardSelect.digital-id-selected .id-price-badge { background: var(--navy-deep); color: #ffffff; }
+  #digitalIdCardSelect.digital-id-selected .id-card-type { color: var(--navy-deep); }
+  #digitalIdCardSelect.digital-id-selected .id-card-desc { color: var(--navy-deep); }
+  #digitalIdCardSelect:hover:not(.digital-id-selected) { border-color: var(--sage-light); }
+
+  /* Physical ID card */
   #physicalIdCard { position: relative; }
   #physicalIdCard::before { content: ""; position: absolute; top: 12px; right: 12px; width: 20px; height: 20px; border: 2px solid rgba(167,211,191,0.4); background: transparent; transition: all 0.2s; }
   #physicalIdCard.physical-id-open { border-color: var(--sage) !important; background: var(--sage) !important; }
@@ -918,6 +929,10 @@
     transition: all 0.2s; position: relative; overflow: hidden;
   }
   .id-download-btn:hover { background: var(--sage-light); transform: translateY(-2px); }
+  @media (max-width: 480px) {
+    .id-download-btn { font-size: clamp(13px, 4.5vw, 18px); padding: 15px 12px 18px; }
+    .id-upgrade-btn { font-size: clamp(13px, 4.5vw, 18px) !important; padding: 15px 12px 18px !important; }
+  }
   .id-download-btn svg { width: 18px; height: 18px; }
   .id-download-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); transition: left 0.4s; } .id-download-btn:hover::before { left: 100%; } .id-download-btn:active { transform: translateY(0); }
 
@@ -1281,19 +1296,38 @@
       <div class="section-line"></div>
     </div>
 
-    <!-- PHYSICAL ID — tap to expand details -->
+    <!-- ID CHOICE: Digital (default) + Physical -->
     <div class="field-group">
-      <div id="physicalIdCard" onclick="togglePhysicalDetails()" role="button" tabindex="0" aria-expanded="false" aria-controls="physicalIdDetails" style="cursor:pointer; border:2px solid var(--grime); padding:20px; background:var(--navy-mid); display:flex; align-items:center; justify-content:space-between; user-select:none; transition:border-color 0.2s;">
-        <div>
-          <div class="id-price-badge" style="margin-bottom:8px;">₱250</div>
-          <div class="id-card-type">PHYSICAL ID</div>
-          <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
-              <li style="padding-left:1em;text-indent:-1em;">&#x2022; Premium printed card.</li>
-              <li style="padding-left:1em;text-indent:-1em;">&#x2022; Exclusive physical design.</li>
-              <li style="padding-left:1em;text-indent:-1em;">&#x2022; One time payment. Lifetime membership.</li>
-              <li style="padding-left:1em;text-indent:-1em;">&#x2022; Earn points on every purchase at partner shops. <em>(Coming Soon)</em></li>
-            </ul></div>
+      <div class="id-cards">
+
+        <!-- LEFT: Digital ID (free, default selected) -->
+        <div style="display:flex;">
+          <div id="digitalIdCardSelect" onclick="selectIdType('digital')" role="button" tabindex="0" aria-expanded="true" style="user-select:none; width:100%;">
+            <div class="id-price-badge" style="margin-bottom:8px;">FREE</div>
+            <div class="id-card-type">DIGITAL ID</div>
+            <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Digital ID (downloadable).</li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Community access / listed as a member.</li>
+              </ul></div>
+          </div>
         </div>
+
+        <!-- RIGHT: Physical ID (₱250) -->
+        <div style="display:flex;">
+          <div id="physicalIdCard" onclick="selectIdType('physical')" role="button" tabindex="0" aria-expanded="false" aria-controls="physicalIdDetails" style="cursor:pointer; border:2px solid var(--grime); padding:20px; background:var(--navy-mid); user-select:none; transition:border-color 0.2s; width:100%;">
+            <div class="id-price-badge" style="margin-bottom:8px;">₱250</div>
+            <div class="id-card-type">PHYSICAL ID</div>
+            <div class="id-card-desc"><ul style="list-style:none;padding:0;margin:0;">
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Premium printed card.</li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Exclusive physical design.</li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; One time payment. Lifetime membership.</li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Earn points on every purchase at partner shops. <em>(Coming Soon)</em></li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Raffle eligibility.</li>
+                <li style="padding-left:1em;text-indent:-1em;">&#x2022; Merch discounts.</li>
+              </ul></div>
+          </div>
+        </div>
+
       </div>
       <div id="physicalIdDetails" style="display:none;">
         <div class="delivery-section" id="deliverySection" style="display:block; margin-top:0;">
@@ -1421,6 +1455,29 @@
     <button id="id-download-btn" class="id-download-btn" onclick="downloadDigitalID(this)">
       <i class="ph ph-download-simple" style="font-size:28px;line-height:1;" aria-hidden="true"></i>
       DOWNLOAD DIGITAL ID
+    </button>
+    <button id="upgradeToPhysicalBtn" class="id-upgrade-btn" onclick="upgradeToPhysical()" style="
+      display: none;
+      width: 100%;
+      margin-top: 12px;
+      background: transparent;
+      color: var(--sage);
+      border: 1px solid var(--sage);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: clamp(14px, 5vw, 21px);
+      letter-spacing: 0.2em;
+      padding: 18px 24px 22px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    " onmouseover="this.style.background='rgba(167,211,191,0.08)'" onmouseout="this.style.background='transparent'">
+      <i class="ph ph-star" style="font-size:20px;line-height:1;" aria-hidden="true"></i>
+      UPGRADE TO PHYSICAL ID
     </button>
   </div>
 
@@ -1853,15 +1910,39 @@
   });
 
   // Toggle Physical ID details panel
-  function togglePhysicalDetails() {
-    var card = document.getElementById('physicalIdCard');
-    var details = document.getElementById('physicalIdDetails');
+  // ID type selection — default to digital
+  window._selectedIdType = 'digital';
 
-    var expanded = card.getAttribute('aria-expanded') === 'true';
-    card.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-    details.style.display = expanded ? 'none' : 'block';
-    card.classList.toggle('physical-id-open', !expanded);
+  function selectIdType(type) {
+    var digitalCard = document.getElementById('digitalIdCardSelect');
+    var physicalCard = document.getElementById('physicalIdCard');
+    var details = document.getElementById('physicalIdDetails');
+    window._selectedIdType = type;
+    if (type === 'physical') {
+      if (digitalCard) digitalCard.classList.remove('digital-id-selected');
+      if (physicalCard) { physicalCard.classList.add('physical-id-open'); physicalCard.setAttribute('aria-expanded', 'true'); }
+      if (details) details.style.display = 'block';
+    } else {
+      if (digitalCard) digitalCard.classList.add('digital-id-selected');
+      if (physicalCard) { physicalCard.classList.remove('physical-id-open'); physicalCard.setAttribute('aria-expanded', 'false'); }
+      if (details) details.style.display = 'none';
+    }
   }
+
+  // Upgrade from Digital to Physical ID
+  function upgradeToPhysical() {
+    if (window._pendingMemberData) window._pendingMemberData.id_type = 'physical';
+    var gcashSection = document.getElementById('gcashPaymentSection');
+    var upgradeBtn = document.getElementById('upgradeToPhysicalBtn');
+    if (upgradeBtn) upgradeBtn.style.display = 'none';
+    if (gcashSection) {
+      gcashSection.style.display = 'block';
+      setTimeout(function(){ gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 200);
+    }
+  }
+
+  // Initialize: digital selected by default
+  selectIdType('digital');
 
   // Toggle address fields
 
@@ -1904,8 +1985,12 @@
     const styleSelected = document.querySelector('input[name="style"]:checked'); const styleError = document.getElementById('styleError'); if (!styleSelected) { valid = false; if(styleError) styleError.classList.add('visible'); } else { if(styleError) styleError.classList.remove('visible'); }
     const deliveryAck = document.getElementById('deliveryAck');
     const deliveryAckError = document.getElementById('deliveryAckError');
-    if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
-    else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
+    if (window._selectedIdType === 'physical') {
+      if (!deliveryAck || !deliveryAck.checked) { valid = false; if(deliveryAckError) deliveryAckError.classList.add('visible'); }
+      else { if(deliveryAckError) deliveryAckError.classList.remove('visible'); }
+    } else {
+      if(deliveryAckError) deliveryAckError.classList.remove('visible');
+    }
     // Awards are optional — empty rows are filtered on submit (no silent DOM removal)
 
 
@@ -2012,7 +2097,7 @@
         home_spot: fd.get('homeSpot') || null,
         go_to_trick: fd.get('bestTrick') || null,
         awards: awardVals.length ? awardVals.join(', ') : null,
-        id_type: 'physical',
+        id_type: window._selectedIdType === 'physical' ? 'physical' : 'digital',
         photo_url: photoURL,
         member_id: memberId
       };
@@ -2038,17 +2123,29 @@
       window.scrollTo({ top: 0 });
       requestAnimationFrame(scaleIdPreview);
 
-      // Physical ID always required — hide header, digital ID card, download button; show GCash payment
+      // Show different success state based on id_type
       const gcashSection = document.getElementById('gcashPaymentSection');
       const idCardWrapper = document.getElementById('idCaptureWrapper');
       const successHeader = document.querySelector('.success-header');
       const idFooter = document.querySelector('.id-footer');
-      if (idCardWrapper) idCardWrapper.style.display = 'none';
-      if (successHeader) successHeader.style.display = 'none';
-      if (idFooter) idFooter.style.display = 'none';
-      if (gcashSection) {
-        gcashSection.style.display = 'block';
-        setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+      const upgradeBtn = document.getElementById('upgradeToPhysicalBtn');
+
+      if (window._selectedIdType === 'physical') {
+        // Physical: hide digital ID card, show GCash payment
+        if (idCardWrapper) idCardWrapper.style.display = 'none';
+        if (successHeader) successHeader.style.display = 'none';
+        if (idFooter) idFooter.style.display = 'none';
+        if (gcashSection) {
+          gcashSection.style.display = 'block';
+          setTimeout(() => gcashSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+        }
+      } else {
+        // Digital: show digital ID card + download + upgrade button
+        if (idCardWrapper) idCardWrapper.style.display = '';
+        if (successHeader) successHeader.style.display = '';
+        if (idFooter) idFooter.style.display = '';
+        if (upgradeBtn) upgradeBtn.style.display = 'flex';
+        if (gcashSection) gcashSection.style.display = 'none';
       }
     })();
   });
