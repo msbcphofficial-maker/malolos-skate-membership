@@ -1932,6 +1932,7 @@
   // Upgrade from Digital to Physical ID
   function upgradeToPhysical() {
     if (window._pendingMemberData) window._pendingMemberData.id_type = 'physical';
+    window._isUpgrade = true;
     var gcashSection = document.getElementById('gcashPaymentSection');
     var upgradeBtn = document.getElementById('upgradeToPhysicalBtn');
     if (upgradeBtn) upgradeBtn.style.display = 'none';
@@ -2116,6 +2117,30 @@
         barangay: fd.get('barangay') || '',
         skateName: fd.get('skateName') || ''
       };
+
+      // — Insert digital members immediately (no payment step) —
+      if (window._selectedIdType === 'digital') {
+        try {
+          const { error: digitalInsertError } = await supabaseClient.from('members').insert([
+            Object.assign({}, window._pendingMemberData, { payment_status: 'free' })
+          ]);
+          if (digitalInsertError) throw new Error(digitalInsertError.message);
+          window._digitalInserted = true;
+        } catch (e) {
+          showSubmitError('Something went wrong saving your record. Please try again.');
+          return;
+        }
+        // Send Brevo welcome email for digital members
+        if (window._pendingBrevoData) {
+          try {
+            await fetch('/api/add-to-brevo', {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify(window._pendingBrevoData)
+            });
+          } catch (e) { console.warn('Brevo failed:', e); }
+        }
+      }
 
       // — Success: show success screen —
       populateDigitalID(memberId);
@@ -2565,15 +2590,24 @@ function init(){
           }
         }
 
-        // — Insert member record to Supabase now that payment is confirmed —
+        // — Save to Supabase: UPDATE if upgrading from digital, INSERT if direct physical —
         payBtn.innerHTML='<span class="msb-spinner"></span>Confirming\u2026';
         try{
-          var insertData = Object.assign({}, window._pendingMemberData, {
-            payment_status: 'paid',
-            gcash_receipt_url: receiptUrl || null
-          });
-          const{error}=await supabaseClient.from('members').insert([insertData]);
-          if(error) throw new Error(error.message||'Insert failed');
+          if(window._isUpgrade && window._memberId){
+            // Upgrade: update existing digital member record
+            const{error}=await supabaseClient.from('members')
+              .update({ id_type: 'physical', payment_status: 'paid', gcash_receipt_url: receiptUrl || null })
+              .eq('member_id', window._memberId);
+            if(error) throw new Error(error.message||'Update failed');
+          } else {
+            // Direct physical sign-up: insert new record
+            var insertData = Object.assign({}, window._pendingMemberData, {
+              payment_status: 'paid',
+              gcash_receipt_url: receiptUrl || null
+            });
+            const{error}=await supabaseClient.from('members').insert([insertData]);
+            if(error) throw new Error(error.message||'Insert failed');
+          }
         }catch(e){
           payBtn.disabled=false;
           payBtn.innerHTML=origPayHTML;
@@ -2583,8 +2617,8 @@ function init(){
           return;
         }
 
-        // — Brevo: send welcome email now that member is confirmed —
-        if(window._pendingBrevoData){
+        // — Brevo: send welcome email only for direct physical sign-ups (digital members got it on submit) —
+        if(!window._isUpgrade && window._pendingBrevoData){
           try{
             await fetch('/api/add-to-brevo', {
               method: 'POST',
