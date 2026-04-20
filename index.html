@@ -2596,7 +2596,7 @@ function init(){
           if(window._isUpgrade && window._memberId){
             // Upgrade: update existing digital member record
             const{error}=await supabaseClient.from('members')
-              .update({ id_type: 'physical', payment_status: 'paid', gcash_receipt_url: receiptUrl || null })
+              .update({ id_type: 'physical', payment_status: 'paid', gcash_receipt_url: receiptUrl || null, paid: true, paid_at: new Date().toISOString() })
               .eq('member_id', window._memberId);
             if(error) throw new Error(error.message||'Update failed');
           } else {
