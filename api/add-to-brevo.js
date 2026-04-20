@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
-  const isMSBC = discipline === 'BMX' || discipline === 'Scooter' || discipline === 'inline_skating';
+  const isMSBC = discipline === 'BMX' || discipline === 'Scooter' || discipline === 'inline_roller';
   const templateId = isMSBC ? 4 : 1;
 
   try {
