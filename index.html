@@ -2140,6 +2140,14 @@
             });
           } catch (e) { console.warn('Brevo failed:', e); }
         }
+      } else {
+        // Physical: insert a pending record now so admins can see incomplete sign-ups
+        try {
+          const { error: pendingErr } = await supabaseClient.from('members').insert([
+            Object.assign({}, window._pendingMemberData, { payment_status: 'pending', paid: false })
+          ]);
+          if (pendingErr) console.warn('Pending insert failed:', pendingErr.message);
+        } catch (e) { console.warn('Pending insert failed:', e); }
       }
 
       // — Success: show success screen —
@@ -2600,13 +2608,11 @@ function init(){
               .eq('member_id', window._memberId);
             if(error) throw new Error(error.message||'Update failed');
           } else {
-            // Direct physical sign-up: insert new record
-            var insertData = Object.assign({}, window._pendingMemberData, {
-              payment_status: 'paid',
-              gcash_receipt_url: receiptUrl || null
-            });
-            const{error}=await supabaseClient.from('members').insert([insertData]);
-            if(error) throw new Error(error.message||'Insert failed');
+            // Direct physical sign-up: update pending record to paid
+            const{error}=await supabaseClient.from('members')
+              .update({ payment_status: 'paid', paid: true, paid_at: new Date().toISOString(), gcash_receipt_url: receiptUrl || null })
+              .eq('member_id', window._memberId);
+            if(error) throw new Error(error.message||'Update failed');
           }
         }catch(e){
           payBtn.disabled=false;
