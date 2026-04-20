@@ -1224,6 +1224,8 @@
         <label for="d3" style="flex:1;text-align:center;">BMX</label>
         <input type="radio" name="discipline" id="d4" value="Scooter">
         <label for="d4" style="flex:1;text-align:center;">Scooter</label>
+        <input type="radio" name="discipline" id="d5" value="inline_skating">
+        <label for="d5" style="flex:1;text-align:center;">Inline Skating</label>
       </div>
       <div id="disciplineError" class="error-msg">Please select your discipline.</div>
     </div>
@@ -2243,7 +2245,7 @@
 
     // Theme: BMX / Scooter → MSBC red design
     const disciplineEl = document.querySelector('input[name="discipline"]:checked');
-    const isMSBC = disciplineEl && (disciplineEl.value === 'BMX' || disciplineEl.value === 'Scooter');
+    const isMSBC = disciplineEl && (disciplineEl.value === 'BMX' || disciplineEl.value === 'Scooter' || disciplineEl.value === 'inline_skating');
     const captureWrapper = document.getElementById('idCaptureWrapper');
     const idLogo = document.getElementById('idCircleLogo');
     if (isMSBC) {
@@ -2754,7 +2756,8 @@ document.addEventListener('DOMContentLoaded', function () {
     'Skateboarding':  ['Street','Park','Vert','Transition','Cruising','Freestyle','Tech'],
     'Fingerboarding': ['Street','Tech','Park','Flatground','Realistic','Ledge & Rail'],
     'BMX':            ['Street','Park','Vert','Trail','Flatland','Race'],
-    'Scooter':        ['Street','Park','Vert','Flatground']
+    'Scooter':        ['Street','Park','Vert','Flatground'],
+    'inline_skating': ['Aggressive','Freestyle']
   };
 
   function updateStyles(discipline) {
@@ -2785,7 +2788,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateCardPreview(discipline) {
     var img = document.getElementById('physCardPreviewImg');
     if (!img) return;
-    if (discipline === 'BMX' || discipline === 'Scooter') {
+    if (discipline === 'BMX' || discipline === 'Scooter' || discipline === 'inline_skating') {
       img.src = 'ID%20Preview_MSBC.jpg';
     } else {
       img.src = 'ID%20Preview_Malolos%20Skateboarding.jpg';
